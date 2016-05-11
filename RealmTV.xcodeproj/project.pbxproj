@@ -7,19 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1430ECDE1CE2EDC300978DBC /* Pipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1430ECDD1CE2EDC300978DBC /* Pipeline.swift */; };
+		145583E21CE249ED00E17CA2 /* Reveal-tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 145583E01CE249E200E17CA2 /* Reveal-tvOS.framework */; };
 		14B5D24C1CE19B1300BCB79C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5D24B1CE19B1300BCB79C /* AppDelegate.swift */; };
 		14B5D24E1CE19B1300BCB79C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5D24D1CE19B1300BCB79C /* ViewController.swift */; };
 		14B5D2511CE19B1300BCB79C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14B5D24F1CE19B1300BCB79C /* Main.storyboard */; };
 		14B5D2531CE19B1300BCB79C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14B5D2521CE19B1300BCB79C /* Assets.xcassets */; };
+		14B5D25B1CE19BAC00BCB79C /* TalkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5D25A1CE19BAC00BCB79C /* TalkViewController.swift */; };
+		D3EEAFC2FB2980FDAD49FB21 /* Pods_RealmTV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1B254AAA033D25C81BCF3DE /* Pods_RealmTV.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1430ECDD1CE2EDC300978DBC /* Pipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipeline.swift; sourceTree = "<group>"; };
+		145583E01CE249E200E17CA2 /* Reveal-tvOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "Reveal-tvOS.framework"; sourceTree = "<group>"; };
 		14B5D2481CE19B1300BCB79C /* RealmTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealmTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14B5D24B1CE19B1300BCB79C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14B5D24D1CE19B1300BCB79C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		14B5D2501CE19B1300BCB79C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		14B5D2521CE19B1300BCB79C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		14B5D2541CE19B1300BCB79C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14B5D25A1CE19BAC00BCB79C /* TalkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalkViewController.swift; sourceTree = "<group>"; };
+		AF8652352100FB3F035453B3 /* Pods-RealmTV.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealmTV.release.xcconfig"; path = "Pods/Target Support Files/Pods-RealmTV/Pods-RealmTV.release.xcconfig"; sourceTree = "<group>"; };
+		B1B254AAA033D25C81BCF3DE /* Pods_RealmTV.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealmTV.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7DB74A17908656B5AF5473B /* Pods-RealmTV.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealmTV.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RealmTV/Pods-RealmTV.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				145583E21CE249ED00E17CA2 /* Reveal-tvOS.framework in Frameworks */,
+				D3EEAFC2FB2980FDAD49FB21 /* Pods_RealmTV.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,8 +48,11 @@
 		14B5D23F1CE19B1300BCB79C = {
 			isa = PBXGroup;
 			children = (
+				145583E01CE249E200E17CA2 /* Reveal-tvOS.framework */,
 				14B5D24A1CE19B1300BCB79C /* RealmTV */,
 				14B5D2491CE19B1300BCB79C /* Products */,
+				7E1C8222D34BDB5A53D897AD /* Pods */,
+				23DC704B163F2ABF01B98635 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,8 +72,27 @@
 				14B5D24F1CE19B1300BCB79C /* Main.storyboard */,
 				14B5D2521CE19B1300BCB79C /* Assets.xcassets */,
 				14B5D2541CE19B1300BCB79C /* Info.plist */,
+				14B5D25A1CE19BAC00BCB79C /* TalkViewController.swift */,
+				1430ECDD1CE2EDC300978DBC /* Pipeline.swift */,
 			);
 			path = RealmTV;
+			sourceTree = "<group>";
+		};
+		23DC704B163F2ABF01B98635 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B1B254AAA033D25C81BCF3DE /* Pods_RealmTV.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7E1C8222D34BDB5A53D897AD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F7DB74A17908656B5AF5473B /* Pods-RealmTV.debug.xcconfig */,
+				AF8652352100FB3F035453B3 /* Pods-RealmTV.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,9 +102,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 14B5D2571CE19B1300BCB79C /* Build configuration list for PBXNativeTarget "RealmTV" */;
 			buildPhases = (
+				9DBE55ADC7FA4C37570E1DA8 /* 📦 Check Pods Manifest.lock */,
 				14B5D2441CE19B1300BCB79C /* Sources */,
 				14B5D2451CE19B1300BCB79C /* Frameworks */,
 				14B5D2461CE19B1300BCB79C /* Resources */,
+				73D4CF7D09C48F8F5FCE91AE /* 📦 Embed Pods Frameworks */,
+				6F6164C14AF8B7BEB85A7B93 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -93,6 +130,7 @@
 				TargetAttributes = {
 					14B5D2471CE19B1300BCB79C = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = J3TK74588Q;
 					};
 				};
 			};
@@ -126,13 +164,63 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6F6164C14AF8B7BEB85A7B93 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RealmTV/Pods-RealmTV-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		73D4CF7D09C48F8F5FCE91AE /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RealmTV/Pods-RealmTV-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9DBE55ADC7FA4C37570E1DA8 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		14B5D2441CE19B1300BCB79C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				14B5D24E1CE19B1300BCB79C /* ViewController.swift in Sources */,
+				14B5D25B1CE19BAC00BCB79C /* TalkViewController.swift in Sources */,
 				14B5D24C1CE19B1300BCB79C /* AppDelegate.swift in Sources */,
+				1430ECDE1CE2EDC300978DBC /* Pipeline.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,25 +323,47 @@
 		};
 		14B5D2581CE19B1300BCB79C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F7DB74A17908656B5AF5473B /* Pods-RealmTV.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = RealmTV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = li.lsr.RealmTV;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lz",
+					"-framework",
+					"Reveal-tvOS",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
 		14B5D2591CE19B1300BCB79C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF8652352100FB3F035453B3 /* Pods-RealmTV.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = RealmTV/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = li.lsr.RealmTV;
+				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -276,6 +386,7 @@
 				14B5D2591CE19B1300BCB79C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

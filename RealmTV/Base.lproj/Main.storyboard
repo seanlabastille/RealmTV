@@ -1,24 +1,76 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="6185.10" systemVersion="14A360a" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="NO" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6181.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RealmTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="COY-On-V1g">
+                                <rect key="frame" x="728" y="497" width="465" height="86"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Show Talk (and Slides)"/>
+                                <connections>
+                                    <segue destination="v6K-tO-tmO" kind="show" id="jkT-NW-shp"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HyE-IJ-uJs">
+                                <rect key="frame" x="580" y="98" width="369" height="216"/>
+                                <subviews>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7IA-kz-qoS">
+                                        <rect key="frame" x="64" y="44" width="0.0" height="0.0"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="369" id="41O-sh-aGH"/>
+                                    <constraint firstItem="7IA-kz-qoS" firstAttribute="leading" secondItem="HyE-IJ-uJs" secondAttribute="leading" id="5Py-6k-1mg"/>
+                                    <constraint firstAttribute="bottom" secondItem="7IA-kz-qoS" secondAttribute="bottom" id="948-Gy-UvP"/>
+                                    <constraint firstItem="7IA-kz-qoS" firstAttribute="width" secondItem="HyE-IJ-uJs" secondAttribute="width" id="CWR-Nk-luL"/>
+                                    <constraint firstItem="7IA-kz-qoS" firstAttribute="height" secondItem="HyE-IJ-uJs" secondAttribute="height" id="Mse-Pq-f59"/>
+                                    <constraint firstAttribute="height" constant="216" id="OcC-Y1-f5Z"/>
+                                    <constraint firstAttribute="trailing" secondItem="7IA-kz-qoS" secondAttribute="trailing" id="Vyi-tb-ip6"/>
+                                    <constraint firstItem="7IA-kz-qoS" firstAttribute="centerY" secondItem="HyE-IJ-uJs" secondAttribute="centerY" id="ae2-I8-C7U"/>
+                                    <constraint firstItem="7IA-kz-qoS" firstAttribute="top" secondItem="HyE-IJ-uJs" secondAttribute="top" id="kiV-NN-lUT"/>
+                                    <constraint firstItem="7IA-kz-qoS" firstAttribute="centerX" secondItem="HyE-IJ-uJs" secondAttribute="centerX" id="twb-Mb-PQ1"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="HyE-IJ-uJs" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="560" id="C2F-6D-G7r"/>
+                            <constraint firstItem="HyE-IJ-uJs" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="98" id="aKn-ER-29e"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="attributedTextView" destination="HyE-IJ-uJs" id="b2V-2c-0TE"/>
+                        <outlet property="textView" destination="7IA-kz-qoS" id="Q6b-iU-ik5"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="305" y="1526"/>
+        </scene>
+        <!--AV Player View Controller-->
+        <scene sceneID="866-er-4Hg">
+            <objects>
+                <avPlayerViewController videoGravity="AVLayerVideoGravityResizeAspect" id="v6K-tO-tmO" customClass="TalkViewController" customModule="RealmTV" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f97-RA-5Ju" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
         </scene>
     </scenes>

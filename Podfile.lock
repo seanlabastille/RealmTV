@@ -1,0 +1,26 @@
+PODS:
+  - Alamofire (3.3.1)
+  - AlamofireRSSParser (1.0.2-tv):
+    - Alamofire (~> 3.3.0)
+  - Ji (1.2.0):
+    - Ji/Ji (= 1.2.0)
+  - Ji/Ji (1.2.0):
+    - Ji/Ji-libxml
+  - Ji/Ji-libxml (1.2.0)
+
+DEPENDENCIES:
+  - AlamofireRSSParser (from `./AlamofireRSSParser.podspec`)
+  - Ji
+
+EXTERNAL SOURCES:
+  AlamofireRSSParser:
+    :podspec: ./AlamofireRSSParser.podspec
+
+SPEC CHECKSUMS:
+  Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
+  AlamofireRSSParser: c16c0e05c857016a5cf9fbe28594ebf624b55f0b
+  Ji: ddebb22f9ac445db6e884b66f78ea74fb135fdb7
+
+PODFILE CHECKSUM: 340bcd7050e34a74faaadff5cd41fdc4656266cc
+
+COCOAPODS: 1.0.0.rc.1

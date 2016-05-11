@@ -1,0 +1,6 @@
+framework module Pods_RealmTV {
+  umbrella header "Pods-RealmTV-umbrella.h"
+
+  export *
+  module * { export * }
+}
