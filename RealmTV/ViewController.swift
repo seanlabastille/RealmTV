@@ -10,36 +10,53 @@ import UIKit
 import AVKit 
 
 class ViewController: UIViewController {
-    @IBOutlet weak var textView: UITextView!
-    @IBOutlet weak var attributedTextView: UIView!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    @IBOutlet weak var talksTableView: UITableView!
+    
+    var items = [FeedItem]()
+    var onceToken = dispatch_once_t()
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        let data = NSData(contentsOfURL: NSURL(string:"https://developer.apple.com/xcode/download/")!)!
-        if let attributedString = try? NSAttributedString(data: data, options: [NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType], documentAttributes: nil),
-            textView = textView {
-            textView.attributedText = attributedString
+        dispatch_once(&onceToken) {
+        realmFeedItems { items in
+            items.prefix(50).forEach { item in
+                item.addTalkDetails { item in
+                    if item.talk != nil {
+                    self.items.append(item)
+                    self.talksTableView.reloadData()
+                    }
+                }
+            }
         }
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        dump("\(#function)")
-        if let talkVC = segue.destinationViewController as? TalkViewController {
-            talkVC.player = AVPlayer(playerItem: AVPlayerItem(asset:AVAsset(URL: NSURL(string: "https://embed-ssl.wistia.com/deliveries/e188517bd2a7f96f0dc5ea8e80b6458ff9f5dc5d.bin")!)))
-            
-            talkVC.contentOverlayView
         }
     }
 
+}
+
+extension ViewController: UITableViewDelegate {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row < items.count {
+            if items[indexPath.row].talk != nil {
+                let talkViewController = TalkViewController(feedItem: items[indexPath.row])
+                self.presentViewController(talkViewController, animated: true, completion: nil)
+            }
+        }
+    }
+}
+
+extension ViewController: UITableViewDataSource {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCellWithIdentifier("talk"),
+               itemIndex = Optional.Some(indexPath.row) where itemIndex < items.count {
+            cell.textLabel?.text = items[itemIndex].title
+            cell.detailTextLabel?.text = items[itemIndex].description
+            return cell
+        }
+        fatalError()
+    }
 }
 

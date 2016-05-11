@@ -40,12 +40,12 @@ func realmFeedItems(completion: ([FeedItem] -> ())) {
 }
 
 extension FeedItem {
-    mutating func addTalkDetails(talkFound: (Bool -> ())? = nil) {
+    func addTalkDetails(talkFound: (FeedItem -> ())? = nil) {
         let jiDoc = Ji(htmlURL: url)
         if let scriptNodes = jiDoc?.xPath("//script") {
             for node in scriptNodes {
                 if let nodeContent = node.content,
-                       setupVideoRange = nodeContent.rangeOfString("setupVideo") {
+                       _ = nodeContent.rangeOfString("setupVideo") {
                     let videoIDRegularExpression = try! NSRegularExpression(pattern: "setupVideo\\(\".*\", \"(.*)\"\\);", options: [])
                     let matches = videoIDRegularExpression.matchesInString(nodeContent, options: [], range: NSMakeRange(0, nodeContent.characters.count))
                     if let idMatchRange = matches.first?.rangeAtIndex(1) {
@@ -60,18 +60,90 @@ extension FeedItem {
                            firstChapterVideo = firstChapter["video"],
                            firstChapterSlides = firstChapter["slides"] as? [AnyObject] {
                             let videoURL = (firstChapterVideo?["url"] ?? "") as! String
-                            var slideURL = ""
-                            let timings = [:]
+                            var slidesURL = ""
+                            var timings: [NSTimeInterval:Int] = [:]
                             for slide in firstChapterSlides {
-                                slideURL = (slide["url"] ?? "") as! String
-                                // TODO: Timing
+                                if let slideURL = (slide["url"] ?? "") as? String,
+                                       fragmentRange = slideURL.rangeOfString("#") {
+                                    slidesURL = slideURL
+                                    let slideTime = (slide["time"] ?? -1) as! NSTimeInterval
+                                    let slideNumber = slideURL.substringFromIndex(fragmentRange.startIndex.successor())
+                                    timings[slideTime] = Int(slideNumber)
+                                }
                             }
-                            slideURL = slideURL.substringToIndex(slideURL.rangeOfString("#")?.startIndex ?? slideURL.endIndex)
-                            talk = Talk(videoURL: NSURL(string: videoURL)!, slidesURL: NSURL(string: slideURL)!, slideTimes: [:])
+                            materializeVideoURL(NSURL(string:videoURL)!) { url in
+                                var vitem = self
+                                vitem.talk = Talk(videoURL: url!, slidesURL: NSURL(string: slidesURL)!, slideTimes: timings)
+                                talkFound?(vitem)
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+    
+    func materializeVideoURL(videoURL: NSURL, completion: (NSURL? -> ())) {
+        switch videoURL.host {
+        case .Some("realm.wistia.com"):
+            let request = NSMutableURLRequest(URL: NSURL(string: "https://fast.wistia.net/embed/iframe/\(videoURL.lastPathComponent ?? "")")!)
+            request.addValue("\(videoURL)", forHTTPHeaderField: "Referer")
+            Alamofire.request(request).response { (request,response,responseData,error) in
+                let responseString = String(data: responseData!, encoding: NSUTF8StringEncoding)!
+                let iFrameInitRegex = try! NSRegularExpression(pattern: "Wistia\\.iframeInit\\((\\{.*), \\{\\}\\)", options: [])
+                let matches = iFrameInitRegex.matchesInString(responseString, options: [], range: NSMakeRange(0, responseString.characters.count))
+                //dump(matches)
+                if let firstMatch = matches.first {
+                    let matchStartIndex = responseString.startIndex.advancedBy(firstMatch.rangeAtIndex(1).location)
+                    let matchEndIndex = responseString.startIndex.advancedBy(NSMaxRange(firstMatch.rangeAtIndex(1)))
+                    let iframeInitJSON = responseString.substringWithRange(matchStartIndex..<matchEndIndex).dataUsingEncoding(NSUTF8StringEncoding)
+                    let json = try! NSJSONSerialization.JSONObjectWithData(iframeInitJSON!, options: [])
+                    // display_name: "1080p"
+                    if let assets = json["assets"] as? Array<AnyObject> {
+                        let a1080pAsset = assets.filter { asset in
+                            if let displayName = asset["display_name"] as? String {
+                                return displayName == "1080p"
+                            } else {
+                                return false
+                            }
+                    }.first
+                        if let urlString = a1080pAsset!["url"] as? String {
+                            completion(NSURL(string: urlString))
+                        }
+                    }
+                }
+//                completion(nil)
+            }
+        default:
+            dump("Unhandled video host: \(videoURL.host)")
+        }
+    }
+    
+    
+}
+
+extension Talk {
+    var presentationID: String? {
+        get {
+            return slidesURL.path?.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "/"))
+        }
+    }
+    subscript(slide slide: Int) -> UIImage? {
+        if slide < slideTimes.count {
+            let group = dispatch_group_create()
+            var image: UIImage?
+            dispatch_group_enter(group)
+            let slideURLString = "https://speakerd.s3.amazonaws.com/presentations/\(presentationID ?? "")/slide_\(slide).jpg"
+            Alamofire.request(.GET, slideURLString).responseData(completionHandler: { (response) in
+                if let data = response.data, i = UIImage(data: data) {
+                    image = i
+                }
+                dispatch_group_leave(group)
+            })
+            dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+            return image
+        } else {
+            return nil
         }
     }
 }

@@ -15,13 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        realmFeedItems {
-            $0.prefix(10).forEach { item in
-                var item = item
-                item.addTalkDetails()
-                dump(item.talk)
-            }
-        }
+        
         return true
     }
 

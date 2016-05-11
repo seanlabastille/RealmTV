@@ -10,13 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RealmTV/TalkViewController.swift"
-            timestampString = "484551148.942988"
+            timestampString = "484687352.922892"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "20"
-            endingLineNumber = "20"
-            landmarkName = "viewDidAppear(_:)"
-            landmarkType = "5">
+            startingLineNumber = "60"
+            endingLineNumber = "60">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
