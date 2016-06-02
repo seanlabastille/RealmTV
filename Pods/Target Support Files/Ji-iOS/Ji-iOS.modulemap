@@ -1,0 +1,6 @@
+framework module Ji {
+  umbrella header "Ji-iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

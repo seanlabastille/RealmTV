@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JmU-su-RC3">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="realmtv_ios" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="xrE-80-O6f">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="WdK-4Z-hjs">
+                                        <rect key="frame" x="173" y="0.0" width="255" height="29"/>
+                                        <segments>
+                                            <segment title="None"/>
+                                            <segment title="Small"/>
+                                            <segment title="Medium"/>
+                                            <segment title="Large"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="ec3-cS-qgP"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vbw-l1-oXe">
+                                        <rect key="frame" x="111" y="48" width="379" height="29"/>
+                                        <segments>
+                                            <segment title="Top Left"/>
+                                            <segment title="Top Right"/>
+                                            <segment title="Bottom Left"/>
+                                            <segment title="Bottom Right"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="hVe-zt-eSw"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="P8z-TR-VMK">
+                                        <rect key="frame" x="139" y="96" width="322" height="200"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Transcript follows video progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h9d-F0-Gb8">
+                                                <rect key="frame" x="0.0" y="90" width="253" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F9H-pc-RTN">
+                                                <rect key="frame" x="273" y="85" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g3U-8w-Ze1">
+                                        <rect key="frame" x="0.0" y="316" width="600" height="220"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="g3U-8w-Ze1" firstAttribute="width" secondItem="xrE-80-O6f" secondAttribute="width" id="Uqz-6H-dEh"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xrE-80-O6f" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="NFx-RN-B3m"/>
+                            <constraint firstItem="xrE-80-O6f" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="RaO-V9-JCS"/>
+                            <constraint firstItem="xrE-80-O6f" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="UyQ-7h-I2Y"/>
+                            <constraint firstItem="xrE-80-O6f" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="acr-Gd-gl5"/>
+                            <constraint firstAttribute="trailing" secondItem="xrE-80-O6f" secondAttribute="trailing" id="pU6-uV-1ZT"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="UyQ-7h-I2Y"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" id="jiJ-0R-TqN"/>
+                    <connections>
+                        <outlet property="slidePositionSegmentedControl" destination="vbw-l1-oXe" id="HU7-Uq-DUa"/>
+                        <outlet property="slideSizeSegmentedControl" destination="WdK-4Z-hjs" id="PTT-rJ-jUY"/>
+                        <outlet property="transcriptShouldFollowSwitch" destination="F9H-pc-RTN" id="2qk-E8-8BH"/>
+                        <outlet property="webViewView" destination="g3U-8w-Ze1" id="ELK-nv-vbq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1003" y="191"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="C53-jB-3gj">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JmU-su-RC3" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yvc-dg-qdk">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="TQw-vE-2i6"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k9s-cU-IeD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="333" y="851"/>
+        </scene>
+    </scenes>
+</document>

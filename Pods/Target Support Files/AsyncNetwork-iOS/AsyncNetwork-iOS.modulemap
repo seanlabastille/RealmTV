@@ -1,0 +1,6 @@
+framework module AsyncNetwork {
+  umbrella header "AsyncNetwork-iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

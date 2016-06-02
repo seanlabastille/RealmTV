@@ -10,6 +10,7 @@ import Foundation
 import Alamofire
 import AlamofireRSSParser
 import Ji
+import Freddy
 
 struct FeedItem {
     let title: String
@@ -25,19 +26,60 @@ struct Talk {
     let slideTimes: [NSTimeInterval:Int]
 }
 
+// MARK: Freddy serialization extensions
+
+extension FeedItem: JSONDecodable, JSONEncodable {
+    init(json value: JSON) throws {
+        title = try value.string("title")
+        description = try value.string("description")
+        date = NSDateFormatter().dateFromString(try value.string("date"))!
+        url = NSURL(string: try value.string("url"))!
+        talk = try Talk(json: value.array("talk").first ?? .Null)
+    }
+    
+    func toJSON() -> JSON {
+        return .Dictionary([
+            "title": .String(title),
+            "description": .String(description),
+            "date": .String(NSDateFormatter().stringFromDate(date)),
+            "url": .String(url.absoluteString),
+            "talk": .Array([talk?.toJSON() ?? .Null])
+            ])
+    }
+}
+
+extension Talk: JSONEncodable, JSONDecodable {
+    init(json value: JSON) throws {
+        videoURL = try NSURL(string: value.string("videoURL"))!
+        slidesURL = try NSURL(string: value.string("slidesURL"))!
+        slideTimes = [:]
+    }
+    
+    func toJSON() -> JSON {
+        return .Dictionary([
+            "videoURL": .String(videoURL.absoluteString),
+            "slidesURL": .String(slidesURL.absoluteString)
+            ])
+    }
+}
+
+// MARK: Feed fetching
+
 func realmFeedItems(completion: ([FeedItem] -> ())) {
     let url = "https://realm.io/feed.xml"
     
-    Alamofire.request(.GET, url).responseRSS() { (response) -> Void in
+    Alamofire.request(.GET, url).responseRSS() { response in
         if let feed: RSSFeed = response.result.value {
             var feedItems: [FeedItem] = []
             for item in feed.items {
-                feedItems.append(FeedItem(title: item.title!, description: item.itemDescription!, date: item.pubDate!, url: NSURL(string: item.link!)!, talk: nil))
+                feedItems.append(FeedItem(title: item.title!, description: item.itemDescription!, date: item.pubDate!, url: NSURL(string: item.guid!)!, talk: nil))
             }
             completion(feedItems)
         }
     }
 }
+
+// MARK: Populate talk details
 
 extension FeedItem {
     func addTalkDetails(talkFound: (FeedItem -> ())? = nil) {
@@ -53,8 +95,8 @@ extension FeedItem {
                         let matchEndIndex = nodeContent.startIndex.advancedBy(NSMaxRange(idMatchRange))
                         let videoID = nodeContent.substringWithRange(matchStartIndex..<matchEndIndex)
                         let videoManifestURL = NSURL(string: "https://realm.io/videos/\(videoID).json")!
-                        let jsonData = try! NSData(contentsOfURL: videoManifestURL, options: [])
-                        if let videoManifestJSON = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
+                        if let jsonData = try? NSData(contentsOfURL: videoManifestURL, options: []),
+                           let videoManifestJSON = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
                            chapters = videoManifestJSON["chapters"] as? [AnyObject],
                            firstChapter = chapters.first,
                            firstChapterVideo = firstChapter["video"],
@@ -71,6 +113,7 @@ extension FeedItem {
                                     timings[slideTime] = Int(slideNumber)
                                 }
                             }
+                            print("Materializing video URL \(videoURL) for talk \(title)")
                             materializeVideoURL(NSURL(string:videoURL)!) { url in
                                 var vitem = self
                                 vitem.talk = Talk(videoURL: url!, slidesURL: NSURL(string: slidesURL)!, slideTimes: timings)
@@ -100,19 +143,19 @@ extension FeedItem {
                     let json = try! NSJSONSerialization.JSONObjectWithData(iframeInitJSON!, options: [])
                     // display_name: "1080p"
                     if let assets = json["assets"] as? Array<AnyObject> {
-                        let a1080pAsset = assets.filter { asset in
+                        let a1080pAssets = assets.filter { asset in
                             if let displayName = asset["display_name"] as? String {
                                 return displayName == "1080p"
                             } else {
                                 return false
                             }
-                    }.first
-                        if let urlString = a1080pAsset!["url"] as? String {
+                        }
+                        if let firstAsset = a1080pAssets.first,
+                               urlString = firstAsset["url"] as? String {
                             completion(NSURL(string: urlString))
                         }
                     }
                 }
-//                completion(nil)
             }
         default:
             dump("Unhandled video host: \(videoURL.host)")
@@ -122,12 +165,15 @@ extension FeedItem {
     
 }
 
+// MARK: Talk support
+
 extension Talk {
     var presentationID: String? {
         get {
             return slidesURL.path?.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "/"))
         }
     }
+    
     subscript(slide slide: Int) -> UIImage? {
         if slide < slideTimes.count {
             let group = dispatch_group_create()

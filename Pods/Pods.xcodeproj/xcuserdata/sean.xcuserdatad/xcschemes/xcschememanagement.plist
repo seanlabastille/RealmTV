@@ -4,22 +4,72 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Alamofire.xcscheme</key>
+		<key>Alamofire-iOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>AlamofireRSSParser-AlamofireRSS.xcscheme</key>
+		<key>Alamofire-tvOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>AlamofireRSSParser.xcscheme</key>
+		<key>AlamofireRSSParser-iOS-AlamofireRSS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Ji.xcscheme</key>
+		<key>AlamofireRSSParser-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>AlamofireRSSParser-tvOS-AlamofireRSS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>AlamofireRSSParser-tvOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>AsyncNetwork-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>AsyncNetwork-tvOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>CocoaAsyncSocket-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>CocoaAsyncSocket-tvOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Freddy-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Freddy-tvOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Ji-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Ji-tvOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -29,30 +79,90 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-realmtv-ios.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0B1C8F0A7C2078ADFDE89636A0CABBF4</key>
+		<key>0AD8ABFF06D7F72D4DBE436F791E596F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>43FD5AF8E2E268BB58C2BEE180302F51</key>
+		<key>2246C76B57574812052818C1C182BFED</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6DCD8E0D46E3E688EABD466D9ECB53BE</key>
+		<key>2E7BB90A1FA94D276E31E2902FFACCF7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
+		<key>3FECBCA2DC6A93ED9FC47AE95522699E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C4F1DB440B42642636E376448A196E87</key>
+		<key>4C4D29B664B81C6170AECBFB2FDBD43E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4E6C29FE3A84C7AAD38B516DAAE3C305</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>50989FE6F4A3744C312A5B232C78DD4B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7A52A8E7F25AE6A46ACD071EFCD9FA85</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7D6F13F0F85291C910C70D145694D189</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>88EE8708EC128FFF11B98520EF34B158</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>89C69EB624EC8137588D9568F2E11964</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>91706078AA08E5E075DC31B8BA1545FB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A64BC079AD4AF3BFB678711715A8B266</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CD4C689C4B4C1F703468133029ABC972</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E197D967F957B653077504C2E52A4567</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F64EC123786BF4D757038CEC34763059</key>
 		<dict>
 			<key>primary</key>
 			<true/>

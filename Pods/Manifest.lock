@@ -2,6 +2,16 @@ PODS:
   - Alamofire (3.3.1)
   - AlamofireRSSParser (1.0.2-tv):
     - Alamofire (~> 3.3.0)
+  - AsyncNetwork (1.2.0):
+    - CocoaAsyncSocket
+  - CocoaAsyncSocket (7.4.3):
+    - CocoaAsyncSocket/All (= 7.4.3)
+  - CocoaAsyncSocket/All (7.4.3):
+    - CocoaAsyncSocket/GCD
+    - CocoaAsyncSocket/RunLoop
+  - CocoaAsyncSocket/GCD (7.4.3)
+  - CocoaAsyncSocket/RunLoop (7.4.3)
+  - Freddy (2.1.0)
   - Ji (1.2.0):
     - Ji/Ji (= 1.2.0)
   - Ji/Ji (1.2.0):
@@ -9,18 +19,31 @@ PODS:
   - Ji/Ji-libxml (1.2.0)
 
 DEPENDENCIES:
+  - Alamofire
   - AlamofireRSSParser (from `./AlamofireRSSParser.podspec`)
+  - AsyncNetwork (from `https://github.com/jhaybie/async-network.git`)
+  - Freddy
   - Ji
 
 EXTERNAL SOURCES:
   AlamofireRSSParser:
     :podspec: ./AlamofireRSSParser.podspec
+  AsyncNetwork:
+    :git: https://github.com/jhaybie/async-network.git
+
+CHECKOUT OPTIONS:
+  AsyncNetwork:
+    :commit: 853f9714761ccd011feb909e47b8edf90e033af3
+    :git: https://github.com/jhaybie/async-network.git
 
 SPEC CHECKSUMS:
   Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
   AlamofireRSSParser: c16c0e05c857016a5cf9fbe28594ebf624b55f0b
+  AsyncNetwork: e743604f4da56f5f2f21e4a945800c0e1c0e7f24
+  CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
+  Freddy: bbdca013977db29638b24baf6572ce94452bec29
   Ji: ddebb22f9ac445db6e884b66f78ea74fb135fdb7
 
-PODFILE CHECKSUM: 340bcd7050e34a74faaadff5cd41fdc4656266cc
+PODFILE CHECKSUM: 526073bd5e4a89c7efa3e59b588b37d76d69d1b8
 
 COCOAPODS: 1.0.0.rc.1

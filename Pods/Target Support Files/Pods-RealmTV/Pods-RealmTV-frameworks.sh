@@ -84,12 +84,18 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/AlamofireRSSParser/AlamofireRSSParser.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/Ji/Ji.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Alamofire-tvOS/Alamofire.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/AlamofireRSSParser-tvOS/AlamofireRSSParser.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/AsyncNetwork-tvOS/AsyncNetwork.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/CocoaAsyncSocket-tvOS/CocoaAsyncSocket.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Freddy-tvOS/Freddy.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Ji-tvOS/Ji.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/AlamofireRSSParser/AlamofireRSSParser.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/Ji/Ji.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Alamofire-tvOS/Alamofire.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/AlamofireRSSParser-tvOS/AlamofireRSSParser.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/AsyncNetwork-tvOS/AsyncNetwork.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/CocoaAsyncSocket-tvOS/CocoaAsyncSocket.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Freddy-tvOS/Freddy.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/Ji-tvOS/Ji.framework"
 fi
