@@ -18,7 +18,6 @@ class ViewController: UIViewController, AsyncClientDelegate {
     var timer: dispatch_source_t?
     var seconds = 0
     
-    @IBOutlet weak var talkTitleLabel: UILabel!
     var webView: WKWebView = {
         let source = try! String(contentsOfFile: NSBundle.mainBundle().pathForResource("transcriptWrangler", ofType: "js")!)
         let userScript = WKUserScript(source: source, injectionTime: .AtDocumentEnd, forMainFrameOnly: true)
@@ -42,6 +41,9 @@ class ViewController: UIViewController, AsyncClientDelegate {
         webView.bottomAnchor.constraintEqualToAnchor(webViewView.bottomAnchor).active = true
         webView.leadingAnchor.constraintEqualToAnchor(webViewView.leadingAnchor).active = true
         webView.trailingAnchor.constraintEqualToAnchor(webViewView.trailingAnchor).active = true
+        
+        webView.loadHTMLString("<h1 style='font: -apple-system-headline;'>Talk transcript will be shown here</h1>", baseURL: nil)
+        navigationItem.prompt = "Choose a talk on your TV to get started"
     }
     
     func client(theClient: AsyncClient!, didFindService service: NSNetService!, moreComing: Bool) -> Bool {
@@ -65,7 +67,7 @@ class ViewController: UIViewController, AsyncClientDelegate {
         if let object = object as? [String: AnyObject],
            talkData = object["talk-begin"] as? NSData,
             item = try? FeedItem(json: JSON(data: talkData)) {
-            dump(item)
+            navigationItem.prompt = nil
             title = item.title
             webView.loadRequest(NSURLRequest(URL: item.url))
         }

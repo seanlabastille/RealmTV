@@ -20,45 +20,67 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="xrE-80-O6f">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="WdK-4Z-hjs">
-                                        <rect key="frame" x="173" y="0.0" width="255" height="29"/>
-                                        <segments>
-                                            <segment title="None"/>
-                                            <segment title="Small"/>
-                                            <segment title="Medium"/>
-                                            <segment title="Large"/>
-                                        </segments>
-                                        <connections>
-                                            <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="ec3-cS-qgP"/>
-                                        </connections>
-                                    </segmentedControl>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vbw-l1-oXe">
-                                        <rect key="frame" x="111" y="48" width="379" height="29"/>
-                                        <segments>
-                                            <segment title="Top Left"/>
-                                            <segment title="Top Right"/>
-                                            <segment title="Bottom Left"/>
-                                            <segment title="Bottom Right"/>
-                                        </segments>
-                                        <connections>
-                                            <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="hVe-zt-eSw"/>
-                                        </connections>
-                                    </segmentedControl>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="P8z-TR-VMK">
-                                        <rect key="frame" x="139" y="96" width="322" height="200"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="7yv-nK-zN9">
+                                        <rect key="frame" x="126" y="0.0" width="349" height="197"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Transcript follows video progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h9d-F0-Gb8">
-                                                <rect key="frame" x="0.0" y="90" width="253" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" ambiguous="YES" misplaced="YES" text="Slide Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uZj-7m-vF9">
+                                                <rect key="frame" x="0.0" y="89" width="74" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F9H-pc-RTN">
-                                                <rect key="frame" x="273" y="85" width="51" height="31"/>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="WdK-4Z-hjs">
+                                                <rect key="frame" x="94" y="85" width="255" height="29"/>
+                                                <segments>
+                                                    <segment title="None"/>
+                                                    <segment title="Small"/>
+                                                    <segment title="Medium"/>
+                                                    <segment title="Large"/>
+                                                </segments>
+                                                <connections>
+                                                    <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="ec3-cS-qgP"/>
+                                                </connections>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="QbL-tJ-gfI">
+                                        <rect key="frame" x="0.0" y="217" width="600" height="28"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" text="Slide Position" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRG-mt-n6N">
+                                                <rect key="frame" x="0.0" y="4" width="103" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <segmentedControl opaque="NO" contentMode="scaleAspectFit" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="vbw-l1-oXe">
+                                                <rect key="frame" x="123" y="0.0" width="477" height="29"/>
+                                                <segments>
+                                                    <segment title="" image="Top Left"/>
+                                                    <segment title="" image="Top Right"/>
+                                                    <segment title="" image="Bottom Left"/>
+                                                    <segment title="" image="Bottom Right"/>
+                                                </segments>
+                                                <connections>
+                                                    <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="hVe-zt-eSw"/>
+                                                </connections>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="P8z-TR-VMK">
+                                        <rect key="frame" x="139" y="265" width="322" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Transcript follows video progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h9d-F0-Gb8">
+                                                <rect key="frame" x="0.0" y="6" width="253" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F9H-pc-RTN">
+                                                <rect key="frame" x="273" y="0.0" width="51" height="31"/>
                                             </switch>
                                         </subviews>
                                     </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g3U-8w-Ze1">
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g3U-8w-Ze1">
                                         <rect key="frame" x="0.0" y="316" width="600" height="220"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
@@ -113,4 +135,10 @@
             <point key="canvasLocation" x="333" y="851"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Bottom Left" width="256" height="256"/>
+        <image name="Bottom Right" width="256" height="256"/>
+        <image name="Top Left" width="256" height="256"/>
+        <image name="Top Right" width="256" height="256"/>
+    </resources>
 </document>

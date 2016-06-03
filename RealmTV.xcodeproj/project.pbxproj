@@ -547,7 +547,6 @@
 			baseConfigurationReference = B7D3043F2D95081BD9421EAC /* Pods-realmtv-ios.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = realmtv/realmtv.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/RealmTV-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -564,7 +563,6 @@
 			baseConfigurationReference = F9A0E1E24E7212036C89C100 /* Pods-realmtv-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = realmtv/realmtv.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/RealmTV-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;

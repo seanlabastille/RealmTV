@@ -1,6 +1,8 @@
 "use strict"
 
 function scrollToStartOfTranscript() {
+    document.querySelector('#banner').remove();
+    document.querySelector('#social_bar').remove();
     var headers = Array.prototype.filter.call(document.querySelectorAll('h3'), function(node) { return true });
     var firstTranscriptHeader = headers.filter( function(node) { return node.id.match(/.*0{3,4}.*/); })
     if (firstTranscriptHeader.length == 1) {
