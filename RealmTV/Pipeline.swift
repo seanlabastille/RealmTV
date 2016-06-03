@@ -81,6 +81,49 @@ func realmFeedItems(completion: ([FeedItem] -> ())) {
 
 // MARK: Populate talk details
 
+struct RealmTalkMetadata: JSONDecodable {
+    init(json: JSON) throws {
+        title = try json.string("title")
+        chapters = try json.arrayOf("chapters")
+    }
+    
+    let title: String
+    let chapters: [RealmTalkMetadataChapter]
+}
+
+struct RealmTalkMetadataChapter: JSONDecodable {
+    init(json: JSON) throws {
+        title = try json.string("title")
+        duration = try json.int("duration")
+        video = try RealmTalkMetadataChapterVideo(json: json["video"] ?? .Null)
+        slides = try json.arrayOf("slides")
+    }
+    
+    let title: String
+    let duration: Int
+    let video: RealmTalkMetadataChapterVideo
+    let slides: [RealmTalkMetadataChapterSlide]
+}
+
+struct RealmTalkMetadataChapterVideo {
+    init(json: JSON) throws {
+        url = try json.string("url")
+    }
+    
+    let url: String
+}
+
+struct RealmTalkMetadataChapterSlide: JSONDecodable {
+    init(json: JSON) throws {
+        url = try json.string("url")
+        time = try json.int("time")
+    }
+    
+    let url: String
+    let time: Int
+}
+
+
 extension FeedItem {
     func addTalkDetails(talkFound: (FeedItem -> ())? = nil) {
         let jiDoc = Ji(htmlURL: url)
@@ -90,35 +133,33 @@ extension FeedItem {
                        _ = nodeContent.rangeOfString("setupVideo") {
                     let videoIDRegularExpression = try! NSRegularExpression(pattern: "setupVideo\\(\".*\", \"(.*)\"\\);", options: [])
                     let matches = videoIDRegularExpression.matchesInString(nodeContent, options: [], range: NSMakeRange(0, nodeContent.characters.count))
-                    if let idMatchRange = matches.first?.rangeAtIndex(1) {
-                        let matchStartIndex = nodeContent.startIndex.advancedBy(idMatchRange.location)
-                        let matchEndIndex = nodeContent.startIndex.advancedBy(NSMaxRange(idMatchRange))
-                        let videoID = nodeContent.substringWithRange(matchStartIndex..<matchEndIndex)
-                        let videoManifestURL = NSURL(string: "https://realm.io/videos/\(videoID).json")!
-                        if let jsonData = try? NSData(contentsOfURL: videoManifestURL, options: []),
-                           let videoManifestJSON = try? NSJSONSerialization.JSONObjectWithData(jsonData, options: []),
-                           chapters = videoManifestJSON["chapters"] as? [AnyObject],
-                           firstChapter = chapters.first,
-                           firstChapterVideo = firstChapter["video"],
-                           firstChapterSlides = firstChapter["slides"] as? [AnyObject] {
-                            let videoURL = (firstChapterVideo?["url"] ?? "") as! String
-                            var slidesURL = ""
-                            var timings: [NSTimeInterval:Int] = [:]
-                            for slide in firstChapterSlides {
-                                if let slideURL = (slide["url"] ?? "") as? String,
-                                       fragmentRange = slideURL.rangeOfString("#") {
-                                    slidesURL = slideURL
-                                    let slideTime = (slide["time"] ?? -1) as! NSTimeInterval
-                                    let slideNumber = slideURL.substringFromIndex(fragmentRange.startIndex.successor())
-                                    timings[slideTime] = Int(slideNumber)
-                                }
+                    guard let idMatchRange = matches.first?.rangeAtIndex(1) else { return }
+                    let matchStartIndex = nodeContent.startIndex.advancedBy(idMatchRange.location)
+                    let matchEndIndex = nodeContent.startIndex.advancedBy(NSMaxRange(idMatchRange))
+                    let videoID = nodeContent.substringWithRange(matchStartIndex..<matchEndIndex)
+                    guard let videoManifestURL = NSURL(string: "https://realm.io/videos/\(videoID).json") else { return }
+                    
+                    if let jsonData = try? NSData(contentsOfURL: videoManifestURL, options: []),
+                        let metadata = try? RealmTalkMetadata(json: JSON(data: jsonData)),
+                        firstChapter = metadata.chapters.first {
+                        
+                        var slidesURL = ""
+                        var timings: [NSTimeInterval:Int] = [:]
+                        for slide in firstChapter.slides {
+                            if let fragmentRange = slide.url.rangeOfString("#") {
+                                slidesURL = slide.url
+                                let slideTime = NSTimeInterval(slide.time)
+                                let slideNumber = slide.url.substringFromIndex(fragmentRange.startIndex.successor())
+                                timings[slideTime] = Int(slideNumber)
                             }
-                            print("Materializing video URL \(videoURL) for talk \(title)")
-                            materializeVideoURL(NSURL(string:videoURL)!) { url in
-                                var vitem = self
-                                vitem.talk = Talk(videoURL: url!, slidesURL: NSURL(string: slidesURL)!, slideTimes: timings)
-                                talkFound?(vitem)
-                            }
+                        }
+                        
+                        guard let videoURL = NSURL(string: firstChapter.video.url) else { return }
+                        print("Materializing video URL \(videoURL) for talk \(title)")
+                        materializeVideoURL(videoURL) { url in
+                            var vitem = self
+                            vitem.talk = Talk(videoURL: url!, slidesURL: NSURL(string: slidesURL)!, slideTimes: timings)
+                            talkFound?(vitem)
                         }
                     }
                 }

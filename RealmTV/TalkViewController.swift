@@ -23,13 +23,15 @@ class TalkViewController : AVPlayerViewController {
         if let talk = feedItem.talk {
             self.talk = talk
             player = AVPlayer(playerItem: AVPlayerItem(asset: AVAsset(URL: talk.videoURL)))
+            // Fetch first slide
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
                 if let slide = talk[slide: 0] {
                     self.slideOverlayView = UIImageView(image: slide)
                     dispatch_async(dispatch_get_main_queue()) {
                         guard let slideOverlayView = self.slideOverlayView else { return }
                         let bounds = self.view.bounds
-                        let slideSize = CGSize(width: bounds.width/3, height: bounds.height/3)
+                        var slideSize = bounds.size
+                        slideSize /= 3
                         slideOverlayView.frame =
                             CGRect(origin: CGPoint(
                                 x: bounds.size.width-slideSize.width,
@@ -40,6 +42,7 @@ class TalkViewController : AVPlayerViewController {
                     }
                 }
             }
+            // Keep an eye on current play time and fetch relevant slides
             slidesTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0))
             if let timer = slidesTimer {
                 dispatch_source_set_event_handler(timer) {

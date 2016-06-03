@@ -21,7 +21,6 @@ class ViewController: UIViewController {
     var connections = [AsyncConnection]()
     var onceToken = dispatch_once_t()
     
-    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         server = AsyncServer()
@@ -29,27 +28,33 @@ class ViewController: UIViewController {
         server?.delegate = self
         server?.start()
         
+        fetchTalks()
+    }
+    
+    
+    // MARK: Realm talk feed processing
+    func fetchTalks() {
         dispatch_once(&onceToken) {
             realmFeedItems { items in
                 items.prefix(50).forEach { item in
                     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-                        item.addTalkDetails { item in
-                            if item.talk != nil {
-                                var items = self.items
-                                items.append(item)
-                                items.sortInPlace({ (item1, item2) -> Bool in
-                                    return item1.date.compare(item2.date) != .OrderedAscending
-                                })
-                                self.items = items
-                                self.talksTableView.reloadData()
-                            }
-                        }
+                        item.addTalkDetails(self.itemWithTalkDetailsHandler)
                     }
                 }
             }
-        }
+        } // Flatten this?
     }
     
+    func itemWithTalkDetailsHandler(item: FeedItem) {
+        guard item.talk != nil else { return }
+        var items = self.items
+        items.append(item)
+        items.sortInPlace { (item1, item2) -> Bool in
+            return item1.date.compare(item2.date) != .OrderedAscending
+        }
+        self.items = items
+        self.talksTableView.reloadData()
+    }
 }
 
 extension ViewController: UITableViewDelegate {
@@ -70,17 +75,15 @@ extension ViewController: UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row < items.count {
-            if items[indexPath.row].talk != nil {
-                let feedItem = items[indexPath.row]
-                let talkViewController = TalkViewController(feedItem: feedItem)
-                talkViewController.talkDelegate = self
-                self.presentViewController(talkViewController, animated: true, completion: nil)
-                connections.forEach({ (connection) in
-                    if connection.connected {
-                        connection.sendCommand(2, object: ["talk-begin": try! feedItem.toJSON().serialize() ?? "missing talk id"])
-                    }
-                })
+        if indexPath.row < items.count && items[indexPath.row].talk != nil  {
+            let feedItem = items[indexPath.row]
+            let talkViewController = TalkViewController(feedItem: feedItem)
+            talkViewController.talkDelegate = self
+            self.presentViewController(talkViewController, animated: true, completion: nil)
+            connections.forEach { connection in
+                if connection.connected {
+                    connection.sendCommand(2, object: ["talk-begin": try! feedItem.toJSON().serialize() ?? "missing talk id"])
+                }
             }
         }
     }
@@ -104,12 +107,16 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: TalkViewControllerDelegate {
     func talkCurrentTimeChanged(talkViewController: TalkViewController, currentTime: NSTimeInterval) {
-        connections.forEach({ (connection) in
+        connections.forEach { connection in
             if connection.connected {
                 connection.sendCommand(3, object: ["talk-time": currentTime])
             }
-        })
+        }
     }
+}
+
+public func /= (inout sizeToScale: CGSize, denominator: CGFloat) {
+    sizeToScale = CGSize(width: sizeToScale.width/denominator, height: sizeToScale.height/denominator)
 }
 
 extension ViewController: AsyncServerDelegate {
@@ -127,14 +134,14 @@ extension ViewController: AsyncServerDelegate {
         print("\(theServer) \(command) \(object) \(connection)")
         if command == 1 {
             if let tvc = presentedViewController as? TalkViewController {
-                let slideSize: CGSize
+                var slideSize = self.view.bounds.size
                 switch String(object["slide-size"] as! NSNumber) {
                 case "1":
-                    slideSize = CGSize(width: self.view.bounds.width/4, height: self.view.bounds.height/4)
+                    slideSize /= 4
                 case "2":
-                    slideSize = CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/3)
+                    slideSize /= 3
                 case "3":
-                    slideSize = CGSize(width: self.view.bounds.width/2, height: self.view.bounds.height/2)
+                    slideSize /= 2
                 case "0":
                     fallthrough
                 default:
