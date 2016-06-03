@@ -28,15 +28,13 @@
       "scale" : "3x"
     },
     {
-      "size" : "57x57",
       "idiom" : "iphone",
-      "filename" : "Icon.png",
+      "size" : "57x57",
       "scale" : "1x"
     },
     {
-      "size" : "57x57",
       "idiom" : "iphone",
-      "filename" : "Icon@2x.png",
+      "size" : "57x57",
       "scale" : "2x"
     },
     {
@@ -177,9 +175,8 @@
       "subtype" : "42mm"
     },
     {
-      "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "Icon-512.png",
+      "size" : "512x512",
       "scale" : "1x"
     },
     {
