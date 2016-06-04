@@ -1,4 +1,4 @@
-# RealmTV
+![Realm TV](https://media.githubusercontent.com/media/flufff42/RealmTV/master/Asset%20Sources/App%20Icons/Realm%20TV%20Top%20Shelf.png)
 
 tvOS app and iOS companion for watching Realm videos on large screens
 
