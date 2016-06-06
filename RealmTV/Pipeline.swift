@@ -137,7 +137,7 @@ extension FeedItem {
                     let matchStartIndex = nodeContent.startIndex.advancedBy(idMatchRange.location)
                     let matchEndIndex = nodeContent.startIndex.advancedBy(NSMaxRange(idMatchRange))
                     let videoID = nodeContent.substringWithRange(matchStartIndex..<matchEndIndex)
-                    guard let videoManifestURL = NSURL(string: "https://realm.io/videos/\(videoID).json") else { return }
+                    guard let videoManifestURL = NSURL(string: "https://realm.io/assets/videos/\(videoID).json") else { return }
                     
                     if let jsonData = try? NSData(contentsOfURL: videoManifestURL, options: []),
                         let metadata = try? RealmTalkMetadata(json: JSON(data: jsonData)),
