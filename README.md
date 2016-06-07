@@ -4,7 +4,9 @@ tvOS app and iOS companion for watching Realm videos on large screens
 
 ## Setup
 
-After cloning, open `RealmTV.xcworkspace` and launch `RealmTV` onto an Apple TV running tvOS and `realmtv-ios` onto an iOS device.
+- _**Clone**_ the repository. Due to [git-lft#903](https://github.com/github/git-lfs/issues/903) downloading the `ZIP` archive will not include image assets stored using [`LFS`](https://git-lfs.github.com).
+- Run `git-lfs pull` to pull images from `LFS`.
+- Open `RealmTV.xcworkspace` and launch `RealmTV` onto an Apple TV running tvOS and `realmtv-ios` onto an iOS device.
 
 ## Use
 - Open the iOS app on your favourite second screen device and choose a talk on the Apple TV.
