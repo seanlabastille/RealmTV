@@ -4,7 +4,7 @@ tvOS app and iOS companion for watching Realm videos on large screens
 
 ## Setup
 
-- _**Clone**_ the repository. Due to [git-lft#903](https://github.com/github/git-lfs/issues/903) downloading the `ZIP` archive will not include image assets stored using [`LFS`](https://git-lfs.github.com).
+- _**Clone**_ the repository. Due to [git-lfs#903](https://github.com/github/git-lfs/issues/903) downloading the `ZIP` archive will not include image assets stored using [`LFS`](https://git-lfs.github.com).
 - Run `git-lfs pull` to pull images from `LFS`.
 - Open `RealmTV.xcworkspace` and launch `RealmTV` onto an Apple TV running tvOS and `realmtv-ios` onto an iOS device.
 
