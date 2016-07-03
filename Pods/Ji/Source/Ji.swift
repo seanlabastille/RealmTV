@@ -32,16 +32,16 @@ public class Ji {
 	/// A flag specifies whether the data is XML or not.
 	internal var isXML: Bool = true
 	/// The XML/HTML data.
-	private(set) public var data: NSData?
+	private(set) public var data: Data?
 	/// The encoding used by in this document.
-	private(set) public var encoding: NSStringEncoding = NSUTF8StringEncoding
+	private(set) public var encoding: String.Encoding = String.Encoding.utf8
 	
 	public typealias htmlDocPtr = xmlDocPtr
 	/// The xmlDocPtr for this document
-	private(set) public var xmlDoc: xmlDocPtr = nil
+	private(set) public var xmlDoc: xmlDocPtr? = nil
 	/// Alias for xmlDoc
 	private(set) public var htmlDoc: htmlDocPtr {
-		get { return xmlDoc }
+		get { return xmlDoc! }
 		set { xmlDoc = newValue }
 	}
 	
@@ -58,16 +58,16 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public required init?(data: NSData?, encoding: NSStringEncoding, isXML: Bool) {
-		if let data = data where data.length > 0 {
+	public required init?(data: Data?, encoding: String.Encoding, isXML: Bool) {
+		if let data = data where data.count > 0 {
 			self.isXML = isXML
 			self.data = data
 			self.encoding = encoding
 			
-			let cBuffer = UnsafePointer<CChar>(data.bytes)
-			let cSize = CInt(data.length)
-			let cfEncoding = CFStringConvertNSStringEncodingToEncoding(encoding)
-			let cfEncodingAsString: CFStringRef = CFStringConvertEncodingToIANACharSetName(cfEncoding)
+			let cBuffer = UnsafePointer<CChar>((data as NSData).bytes)
+			let cSize = CInt(data.count)
+			let cfEncoding = CFStringConvertNSStringEncodingToEncoding(encoding.rawValue)
+			let cfEncodingAsString: CFString = CFStringConvertEncodingToIANACharSetName(cfEncoding)
 			let cEncoding: UnsafePointer<CChar> = CFStringGetCStringPtr(cfEncodingAsString, 0)
 			
 			if isXML {
@@ -91,8 +91,8 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(data: NSData?, isXML: Bool) {
-		self.init(data: data, encoding: NSUTF8StringEncoding, isXML: isXML)
+	public convenience init?(data: Data?, isXML: Bool) {
+		self.init(data: data, encoding: String.Encoding.utf8, isXML: isXML)
 	}
 	
 	
@@ -107,7 +107,7 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(xmlData: NSData, encoding: NSStringEncoding) {
+	public convenience init?(xmlData: Data, encoding: String.Encoding) {
 		self.init(data: xmlData, encoding: encoding, isXML: true)
 	}
 	
@@ -118,7 +118,7 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(xmlData: NSData) {
+	public convenience init?(xmlData: Data) {
 		self.init(data: xmlData, isXML: true)
 	}
 	
@@ -130,7 +130,7 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(htmlData: NSData, encoding: NSStringEncoding) {
+	public convenience init?(htmlData: Data, encoding: String.Encoding) {
 		self.init(data: htmlData, encoding: encoding, isXML: false)
 	}
 	
@@ -141,7 +141,7 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(htmlData: NSData) {
+	public convenience init?(htmlData: Data) {
 		self.init(data: htmlData, isXML: false)
 	}
 	
@@ -158,8 +158,8 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(contentsOfURL url: NSURL, encoding: NSStringEncoding, isXML: Bool) {
-		let data = NSData(contentsOfURL: url)
+	public convenience init?(contentsOfURL url: URL, encoding: String.Encoding, isXML: Bool) {
+		let data = try? Data(contentsOf: url)
 		self.init(data: data, encoding: encoding, isXML: isXML)
 	}
 	
@@ -171,8 +171,8 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(contentsOfURL url: NSURL, isXML: Bool) {
-		self.init(contentsOfURL: url, encoding: NSUTF8StringEncoding, isXML: isXML)
+	public convenience init?(contentsOfURL url: URL, isXML: Bool) {
+		self.init(contentsOfURL: url, encoding: String.Encoding.utf8, isXML: isXML)
 	}
 	
 	/**
@@ -182,7 +182,7 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(xmlURL: NSURL) {
+	public convenience init?(xmlURL: URL) {
 		self.init(contentsOfURL: xmlURL, isXML: true)
 	}
 	
@@ -193,7 +193,7 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(htmlURL: NSURL) {
+	public convenience init?(htmlURL: URL) {
 		self.init(contentsOfURL: htmlURL, isXML: false)
 	}
 	
@@ -209,8 +209,8 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(xmlString: String, encoding: NSStringEncoding) {
-		let data = xmlString.dataUsingEncoding(encoding, allowLossyConversion: false)
+	public convenience init?(xmlString: String, encoding: String.Encoding) {
+		let data = xmlString.data(using: encoding, allowLossyConversion: false)
 		self.init(data: data, encoding: encoding, isXML: true)
 	}
 	
@@ -222,8 +222,8 @@ public class Ji {
 	
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
-	public convenience init?(htmlString: String, encoding: NSStringEncoding) {
-		let data = htmlString.dataUsingEncoding(encoding, allowLossyConversion: false)
+	public convenience init?(htmlString: String, encoding: String.Encoding) {
+		let data = htmlString.data(using: encoding, allowLossyConversion: false)
 		self.init(data: data, encoding: encoding, isXML: false)
 	}
 	
@@ -235,7 +235,7 @@ public class Ji {
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
 	public convenience init?(xmlString: String) {
-		let data = xmlString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+		let data = xmlString.data(using: String.Encoding.utf8, allowLossyConversion: false)
 		self.init(data: data, isXML: true)
 	}
 	
@@ -247,7 +247,7 @@ public class Ji {
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
 	public convenience init?(htmlString: String) {
-		let data = htmlString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+		let data = htmlString.data(using: String.Encoding.utf8, allowLossyConversion: false)
 		self.init(data: data, isXML: false)
 	}
 	
@@ -268,7 +268,7 @@ public class Ji {
 		if rootNodePointer == nil {
 			return nil
 		} else {
-			return JiNode(xmlNode: rootNodePointer, jiDocument: self)
+			return JiNode(xmlNode: rootNodePointer!, jiDocument: self)
 		}
 	}()
 	
@@ -279,7 +279,7 @@ public class Ji {
 	
 	- returns: An array of JiNode or nil if rootNode is nil. An empty array will be returned if XPath matches no nodes.
 	*/
-	public func xPath(xPath: String) -> [JiNode]? {
+	public func xPath(_ xPath: String) -> [JiNode]? {
 		return self.rootNode?.xPath(xPath)
 	}
 }

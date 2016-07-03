@@ -32,33 +32,33 @@ JiNode types, these match element types in tree.h
 
 */
 public enum JiNodeType: Int {
-	case Element = 1
-	case Attribute = 2
-	case Text = 3
-	case CDataSection = 4
-	case EntityRef = 5
-	case Entity = 6
-	case Pi = 7
-	case Comment = 8
-	case Document = 9
-	case DocumentType = 10
-	case DocumentFrag = 11
-	case Notation = 12
-	case HtmlDocument = 13
-	case DTD = 14
-	case ElementDecl = 15
-	case AttributeDecl = 16
-	case EntityDecl = 17
-	case NamespaceDecl = 18
-	case XIncludeStart = 19
-	case XIncludeEnd = 20
-	case DocbDocument = 21
+	case element = 1
+	case attribute = 2
+	case text = 3
+	case cDataSection = 4
+	case entityRef = 5
+	case entity = 6
+	case pi = 7
+	case comment = 8
+	case document = 9
+	case documentType = 10
+	case documentFrag = 11
+	case notation = 12
+	case htmlDocument = 13
+	case dtd = 14
+	case elementDecl = 15
+	case attributeDecl = 16
+	case entityDecl = 17
+	case namespaceDecl = 18
+	case xIncludeStart = 19
+	case xIncludeEnd = 20
+	case docbDocument = 21
 }
 
 /// Ji node
 public class JiNode {
 	/// The xmlNodePtr for this node.
-	public let xmlNode: xmlNodePtr
+	public let xmlNode: xmlNodePtr?
 	/// The Ji document contians this node.
 	public unowned let document: Ji
 	/// Node type.
@@ -81,7 +81,7 @@ public class JiNode {
 	init(xmlNode: xmlNodePtr, jiDocument: Ji, keepTextNode: Bool = false) {
 		self.xmlNode = xmlNode
 		document = jiDocument
-		type = JiNodeType(rawValue: Int(xmlNode.memory.type.rawValue))!
+		type = JiNodeType(rawValue: Int(xmlNode.pointee.type.rawValue))!
 		self.keepTextNode = keepTextNode
 	}
 	
@@ -93,7 +93,7 @@ public class JiNode {
 	
 	/// The tag name of this node.
 	public lazy var name: String? = {
-		return String.fromXmlChar(self.xmlNode.memory.name)
+		return String.fromXmlChar(self.xmlNode?.pointee.name)
 	}()
 	
 	/// Helper property for avoiding unneeded calculations.
@@ -107,15 +107,14 @@ public class JiNode {
 		} else {
 			_children = [JiNode]()
 			
-			for var childNodePointer = xmlNode.memory.children;
-				childNodePointer != nil;
-				childNodePointer = childNodePointer.memory.next
-			{
+			var childNodePointer = xmlNode?.pointee.children
+			repeat {
 				if keepTextNode || xmlNodeIsText(childNodePointer) == 0 {
-					let childNode = JiNode(xmlNode: childNodePointer, jiDocument: document, keepTextNode: keepTextNode)
+					let childNode = JiNode(xmlNode: childNodePointer!, jiDocument: document, keepTextNode: keepTextNode)
 					_children.append(childNode)
 				}
-			}
+                childNodePointer = childNodePointer?.pointee.next
+			} while childNodePointer != nil
 			_childrenHasBeenCalculated = true
 			_keepTextNodePrevious = keepTextNode
 			return _children
@@ -124,31 +123,31 @@ public class JiNode {
 	
 	/// The first child of this node, nil if the node has no child.
 	public var firstChild: JiNode? {
-		var first = xmlNode.memory.children
+		var first = xmlNode?.pointee.children
 		if first == nil { return nil }
 		if keepTextNode {
-			return JiNode(xmlNode: first, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: first!, jiDocument: document, keepTextNode: keepTextNode)
 		} else {
 			while xmlNodeIsText(first) != 0 {
-				first = first.memory.next
+				first = first?.pointee.next
 				if first == nil { return nil }
 			}
-			return JiNode(xmlNode: first, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: first!, jiDocument: document, keepTextNode: keepTextNode)
 		}
 	}
 	
 	/// The last child of this node, nil if the node has no child.
 	public var lastChild: JiNode? {
-		var last = xmlNode.memory.last
+		var last = xmlNode?.pointee.last
 		if last == nil { return nil }
 		if keepTextNode {
-			return JiNode(xmlNode: last, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: last!, jiDocument: document, keepTextNode: keepTextNode)
 		} else {
 			while xmlNodeIsText(last) != 0 {
-				last = last.memory.prev
+				last = last?.pointee.prev
 				if last == nil { return nil }
 			}
-			return JiNode(xmlNode: last, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: last!, jiDocument: document, keepTextNode: keepTextNode)
 		}
 	}
 	
@@ -159,37 +158,37 @@ public class JiNode {
 	
 	/// The parent of this node.
 	public lazy var parent: JiNode? = {
-		if self.xmlNode.memory.parent == nil { return nil }
-		return JiNode(xmlNode: self.xmlNode.memory.parent, jiDocument: self.document)
+		if self.xmlNode?.pointee.parent == nil { return nil }
+		return JiNode(xmlNode: (self.xmlNode?.pointee.parent)!, jiDocument: self.document)
 	}()
 	
 	/// The next sibling of this node.
 	public var nextSibling: JiNode? {
-		var next = xmlNode.memory.next
+		var next = xmlNode?.pointee.next
 		if next == nil { return nil }
 		if keepTextNode {
-			return JiNode(xmlNode: next, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: next!, jiDocument: document, keepTextNode: keepTextNode)
 		} else {
 			while xmlNodeIsText(next) != 0 {
-				next = next.memory.next
+				next = next?.pointee.next
 				if next == nil { return nil }
 			}
-			return JiNode(xmlNode: next, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: next!, jiDocument: document, keepTextNode: keepTextNode)
 		}
 	}
 	
 	/// The previous sibling of this node.
 	public var previousSibling: JiNode? {
-		var prev = xmlNode.memory.prev
+		var prev = xmlNode?.pointee.prev
 		if prev == nil { return nil }
 		if keepTextNode {
-			return JiNode(xmlNode: prev, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: prev!, jiDocument: document, keepTextNode: keepTextNode)
 		} else {
 			while xmlNodeIsText(prev) != 0 {
-				prev = prev.memory.prev
+				prev = prev?.pointee.prev
 				if prev == nil { return nil }
 			}
-			return JiNode(xmlNode: prev, jiDocument: document, keepTextNode: keepTextNode)
+			return JiNode(xmlNode: prev!, jiDocument: document, keepTextNode: keepTextNode)
 		}
 	}
 	
@@ -202,7 +201,7 @@ public class JiNode {
 			htmlNodeDump(buffer, self.document.htmlDoc, self.xmlNode)
 		}
 		
-		let result = String.fromXmlChar(buffer.memory.content)
+		let result = String.fromXmlChar(buffer?.pointee.content)
 		xmlBufferFree(buffer)
 		return result
 	}()
@@ -218,7 +217,7 @@ public class JiNode {
 	
 	/// Raw value of this node. Leading/trailing white spaces, new lines are kept.
 	public lazy var value: String? = {
-		let valueChars = xmlNodeListGetString(self.document.xmlDoc, self.xmlNode.memory.children, 1)
+		let valueChars = xmlNodeListGetString(self.document.xmlDoc, self.xmlNode?.pointee.children, 1)
 		if valueChars == nil { return nil }
 		let valueString = String.fromXmlChar(valueChars)
 		free(valueChars)
@@ -234,15 +233,18 @@ public class JiNode {
 	*/
 	public subscript(key: String) -> String? {
 		get {
-			for var attribute: xmlAttrPtr = self.xmlNode.memory.properties; attribute != nil; attribute = attribute.memory.next {
-				if key == String.fromXmlChar(attribute.memory.name) {
-					let contentChars = xmlNodeGetContent(attribute.memory.children)
+			var attribute: xmlAttrPtr? = self.xmlNode?.pointee.properties
+            repeat {
+				if key == String.fromXmlChar(attribute?.pointee.name) {
+					let contentChars = xmlNodeGetContent(attribute?.pointee.children)
 					if contentChars == nil { return nil }
 					let contentString = String.fromXmlChar(contentChars)
 					free(contentChars)
+                    
 					return contentString
 				}
-			}
+                attribute = attribute?.pointee.next
+			} while attribute != nil
 			return nil
 		}
 	}
@@ -250,13 +252,12 @@ public class JiNode {
 	/// The attributes dictionary of this node.
 	public lazy var attributes: [String: String] = {
 		var result = [String: String]()
-		for var attribute: xmlAttrPtr = self.xmlNode.memory.properties;
-			attribute != nil;
-			attribute = attribute.memory.next
-		{
-			let key = String.fromXmlChar(attribute.memory.name)
+		var attribute: xmlAttrPtr? = self.xmlNode?.pointee.properties
+			
+		repeat {
+			let key = String.fromXmlChar(attribute?.pointee.name)
 			assert(key != nil, "key doesn't exist")
-			let valueChars = xmlNodeGetContent(attribute.memory.children)
+			let valueChars = xmlNodeGetContent(attribute?.pointee.children)
 			var value: String? = ""
 			if valueChars != nil {
 				value = String.fromXmlChar(valueChars)
@@ -265,7 +266,8 @@ public class JiNode {
 			free(valueChars)
 			
 			result[key!] = value!
-		}
+            attribute = attribute?.pointee.next
+		} while attribute != nil
 		return result
 	}()
 	
@@ -280,32 +282,32 @@ public class JiNode {
 	
 	- returns: An array of JiNode, an empty array will be returned if XPath matches no nodes.
 	*/
-	public func xPath(xPath: String) -> [JiNode] {
+	public func xPath(_ xPath: String) -> [JiNode] {
 		let xPathContext = xmlXPathNewContext(self.document.xmlDoc)
 		if xPathContext == nil {
 			// Unable to create XPath context.
 			return []
 		}
 		
-		xPathContext.memory.node = self.xmlNode
+		xPathContext?.pointee.node = self.xmlNode
 		
-		let xPathObject = xmlXPathEvalExpression(UnsafePointer<xmlChar>(xPath.cStringUsingEncoding(NSUTF8StringEncoding)!), xPathContext)
+		let xPathObject = xmlXPathEvalExpression(UnsafePointer<xmlChar>(xPath.cString(using: String.Encoding.utf8)!), xPathContext)
 		xmlXPathFreeContext(xPathContext)
 		if xPathObject == nil {
 			// Unable to evaluate XPath.
 			return []
 		}
 		
-		let nodeSet = xPathObject.memory.nodesetval
-		if nodeSet == nil || nodeSet.memory.nodeNr == 0 || nodeSet.memory.nodeTab == nil {
+		let nodeSet = xPathObject?.pointee.nodesetval
+		if nodeSet == nil || nodeSet?.pointee.nodeNr == 0 || nodeSet?.pointee.nodeTab == nil {
 			// NodeSet is nil.
             xmlXPathFreeObject(xPathObject)
 			return []
 		}
 		
 		var resultNodes = [JiNode]()
-		for i in 0 ..< Int(nodeSet.memory.nodeNr) {
-			let jiNode = JiNode(xmlNode: nodeSet.memory.nodeTab[i], jiDocument: self.document, keepTextNode: keepTextNode)
+		for i in 0 ..< Int((nodeSet?.pointee.nodeNr)!) {
+			let jiNode = JiNode(xmlNode: (nodeSet?.pointee.nodeTab[i]!)!, jiDocument: self.document, keepTextNode: keepTextNode)
 			resultNodes.append(jiNode)
 		}
 		
@@ -325,7 +327,7 @@ public class JiNode {
 	
 	- returns: The JiNode object found or nil if it doesn't exist.
 	*/
-	public func firstChildWithName(name: String) -> JiNode? {
+	public func firstChildWithName(_ name: String) -> JiNode? {
 		var node = firstChild
 		while (node != nil) {
 			if node!.name == name {
@@ -343,7 +345,7 @@ public class JiNode {
 	
 	- returns: An array of JiNode.
 	*/
-	public func childrenWithName(name: String) -> [JiNode] {
+	public func childrenWithName(_ name: String) -> [JiNode] {
 		return children.filter { $0.name == name }
 	}
 	
@@ -355,7 +357,7 @@ public class JiNode {
 	
 	- returns: The JiNode object found or nil if it doesn't exist.
 	*/
-	public func firstChildWithAttributeName(attributeName: String, attributeValue: String) -> JiNode? {
+	public func firstChildWithAttributeName(_ attributeName: String, attributeValue: String) -> JiNode? {
 		var node = firstChild
 		while (node != nil) {
 			if let value = node![attributeName] where value == attributeValue {
@@ -374,7 +376,7 @@ public class JiNode {
 	
 	- returns: An array of JiNode.
 	*/
-	public func childrenWithAttributeName(attributeName: String, attributeValue: String) -> [JiNode] {
+	public func childrenWithAttributeName(_ attributeName: String, attributeValue: String) -> [JiNode] {
 		return children.filter { $0.attributes[attributeName] == attributeValue }
 	}
 	
@@ -389,7 +391,7 @@ public class JiNode {
 	
 	- returns: The JiNode object found or nil if it doesn't exist.
 	*/
-	public func firstDescendantWithName(name: String) -> JiNode? {
+	public func firstDescendantWithName(_ name: String) -> JiNode? {
 		return firstDescendantWithName(name, node: self)
 	}
 	
@@ -402,7 +404,7 @@ public class JiNode {
 	
 	- returns: The JiNode object found or nil if it doesn't exist.
 	*/
-	private func firstDescendantWithName(name: String, node: JiNode) -> JiNode? {
+	private func firstDescendantWithName(_ name: String, node: JiNode) -> JiNode? {
 		if !node.hasChildren {
 			return nil
 		}
@@ -425,7 +427,7 @@ public class JiNode {
 	
 	- returns: An array of JiNode.
 	*/
-	public func descendantsWithName(name: String) -> [JiNode] {
+	public func descendantsWithName(_ name: String) -> [JiNode] {
 		return descendantsWithName(name, node: self)
 	}
 	
@@ -437,7 +439,7 @@ public class JiNode {
 	
 	- returns: An array of JiNode.
 	*/
-	private func descendantsWithName(name: String, node: JiNode) -> [JiNode] {
+	private func descendantsWithName(_ name: String, node: JiNode) -> [JiNode] {
 		if !node.hasChildren {
 			return []
 		}
@@ -447,7 +449,7 @@ public class JiNode {
 			if child.name == name {
 				results.append(child)
 			}
-			results.appendContentsOf(descendantsWithName(name, node: child))
+			results.append(contentsOf: descendantsWithName(name, node: child))
 		}
 		return results
 	}
@@ -460,7 +462,7 @@ public class JiNode {
 	
 	- returns: The JiNode object found or nil if it doesn't exist.
 	*/
-	public func firstDescendantWithAttributeName(attributeName: String, attributeValue: String) -> JiNode? {
+	public func firstDescendantWithAttributeName(_ attributeName: String, attributeValue: String) -> JiNode? {
 		return firstDescendantWithAttributeName(attributeName, attributeValue: attributeValue, node: self)
 	}
 	
@@ -473,7 +475,7 @@ public class JiNode {
 	
 	- returns: The JiNode object found or nil if it doesn't exist.
 	*/
-	private func firstDescendantWithAttributeName(attributeName: String, attributeValue: String, node: JiNode) -> JiNode? {
+	private func firstDescendantWithAttributeName(_ attributeName: String, attributeValue: String, node: JiNode) -> JiNode? {
 		if !node.hasChildren {
 			return nil
 		}
@@ -497,7 +499,7 @@ public class JiNode {
 	
 	- returns: An array of JiNode.
 	*/
-	public func descendantsWithAttributeName(attributeName: String, attributeValue: String) -> [JiNode] {
+	public func descendantsWithAttributeName(_ attributeName: String, attributeValue: String) -> [JiNode] {
 		return descendantsWithAttributeName(attributeName, attributeValue: attributeValue, node: self)
 	}
 	
@@ -510,7 +512,7 @@ public class JiNode {
 	
 	- returns: An array of JiNode.
 	*/
-	private func descendantsWithAttributeName(attributeName: String, attributeValue: String, node: JiNode) -> [JiNode] {
+	private func descendantsWithAttributeName(_ attributeName: String, attributeValue: String, node: JiNode) -> [JiNode] {
 		if !node.hasChildren {
 			return []
 		}
@@ -520,7 +522,7 @@ public class JiNode {
 			if child[attributeName] == attributeValue {
 				results.append(child)
 			}
-			results.appendContentsOf(descendantsWithAttributeName(attributeName, attributeValue: attributeValue, node: child))
+			results.append(contentsOf: descendantsWithAttributeName(attributeName, attributeValue: attributeValue, node: child))
 		}
 		return results
 	}
@@ -536,14 +538,14 @@ public func ==(lhs: JiNode, rhs: JiNode) -> Bool {
 }
 
 // MARK: - SequenceType
-extension JiNode: SequenceType {
-	public func generate() -> JiNodeGenerator {
+extension JiNode: Sequence {
+	public func makeIterator() -> JiNodeGenerator {
 		return JiNodeGenerator(node: self)
 	}
 }
 
 /// JiNodeGenerator
-public class JiNodeGenerator: GeneratorType {
+public class JiNodeGenerator: IteratorProtocol {
 	private var node: JiNode?
 	private var started = false
 	public init(node: JiNode) {

@@ -33,9 +33,9 @@ extension String {
 	
 	- returns: Returns nil if the CString is NULL or if it contains ill-formed UTF-8 code unit sequences.
 	*/
-	static func fromXmlChar(char: UnsafePointer<xmlChar>) -> String? {
+	static func fromXmlChar(_ char: UnsafePointer<xmlChar>?) -> String? {
 		if char != nil {
-			return String.fromCString(UnsafePointer<CChar>(char))
+			return String(cString: UnsafePointer<CChar>(char!))
 		} else {
 			return nil
 		}

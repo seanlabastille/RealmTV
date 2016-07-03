@@ -18,13 +18,13 @@ extension Request {
     public static func RSSResponseSerializer() -> ResponseSerializer<RSSFeed, NSError> {
         return ResponseSerializer { request, response, data, error in
             guard error == nil else {
-                return .Failure(error!)
+                return .failure(error!)
             }
             
             guard let validData = data else {
                 let failureReason = "Data could not be serialized. Input data was nil."
-                let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
-                return .Failure(error)
+                let error = Error.errorWithCode(.dataSerializationFailed, failureReason: failureReason)
+                return .failure(error)
             }
             
             let parser = AlamofireRSSParser(data: validData)
@@ -32,9 +32,9 @@ extension Request {
             let parsedResults: (feed: RSSFeed?, error: NSError?) = parser.parse()
             
             if let feed = parsedResults.feed {
-                return .Success(feed)
+                return .success(feed)
             } else {
-                return .Failure(parsedResults.error!)
+                return .failure(parsedResults.error!)
             }
         }
     }
@@ -47,7 +47,7 @@ extension Request {
     
         - Returns: The request.
     */
-    public func responseRSS(completionHandler: Response<RSSFeed, NSError> -> Void) -> Self {
+    public func responseRSS(_ completionHandler: (Response<RSSFeed, NSError>) -> Void) -> Self {
         return response(responseSerializer: Request.RSSResponseSerializer(), completionHandler: completionHandler)
     }
     
@@ -65,8 +65,8 @@ extension Request {
     despite it being marked public.  I would love to have it be publicly accessible because I would like to able to pass
     a custom-created instance of this class with configuration properties set into `responseRSS` (see the commented out overload above)
 */
-public class AlamofireRSSParser: NSObject, NSXMLParserDelegate {
-    var parser: NSXMLParser? = nil
+public class AlamofireRSSParser: NSObject, XMLParserDelegate {
+    var parser: XMLParser? = nil
     var feed: RSSFeed? = nil
     var parsingItems: Bool = false
     
@@ -75,23 +75,23 @@ public class AlamofireRSSParser: NSObject, NSXMLParserDelegate {
     var currentAttributes: [String: String]? = nil
     var parseError: NSError? = nil
     
-    public var data: NSData? = nil {
+    public var data: Data? = nil {
         didSet {
             if let data = data {
-                self.parser = NSXMLParser(data: data)
+                self.parser = XMLParser(data: data)
                 self.parser?.delegate = self
             }
         }
     }
     
     override init() {
-        self.parser = NSXMLParser();
+        self.parser = XMLParser();
         
         super.init()
     }
     
-    init(data: NSData) {
-        self.parser = NSXMLParser(data: data)
+    init(data: Data) {
+        self.parser = XMLParser(data: data)
         super.init()
         
         self.parser?.delegate = self
@@ -115,7 +115,7 @@ public class AlamofireRSSParser: NSObject, NSXMLParserDelegate {
     }
     
     //MARK: - NSXMLParserDelegate
-    public func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    public func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         self.currentString = String()
         
         self.currentAttributes = attributeDict
@@ -125,7 +125,7 @@ public class AlamofireRSSParser: NSObject, NSXMLParserDelegate {
         }
     }
     
-    public func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    public func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         //if we're at the item level
         if let currentItem = self.currentItem {
             if ((elementName == "item") || (elementName == "entry")) {
@@ -162,17 +162,17 @@ public class AlamofireRSSParser: NSObject, NSXMLParserDelegate {
             }
             
             if (elementName == "pubDate") {
-                if let date = RSSDateFormatter.rfc822DateFormatter().dateFromString(self.currentString) {
+                if let date = RSSDateFormatter.rfc822DateFormatter().date(from: self.currentString) {
                     currentItem.pubDate = date
-                } else if let date = RSSDateFormatter.rfc822DateFormatter2().dateFromString(self.currentString) {
+                } else if let date = RSSDateFormatter.rfc822DateFormatter2().date(from: self.currentString) {
                     currentItem.pubDate = date
                 }
             }
             
             if (elementName == "published") {
-                if let date = RSSDateFormatter.publishedDateFormatter().dateFromString(self.currentString) {
+                if let date = RSSDateFormatter.publishedDateFormatter().date(from: self.currentString) {
                     currentItem.pubDate = date
-                } else if let date = RSSDateFormatter.publishedDateFormatter2().dateFromString(self.currentString) {
+                } else if let date = RSSDateFormatter.publishedDateFormatter2().date(from: self.currentString) {
                     currentItem.pubDate = date
                 }
             }
@@ -237,36 +237,36 @@ public class AlamofireRSSParser: NSObject, NSXMLParserDelegate {
             }
             
             if (elementName == "pubDate") {
-                if let date = RSSDateFormatter.rfc822DateFormatter().dateFromString(self.currentString) {
+                if let date = RSSDateFormatter.rfc822DateFormatter().date(from: self.currentString) {
                     self.feed?.pubDate = date
-                } else if let date = RSSDateFormatter.rfc822DateFormatter2().dateFromString(self.currentString) {
+                } else if let date = RSSDateFormatter.rfc822DateFormatter2().date(from: self.currentString) {
                     self.feed?.pubDate = date
                 }
             }
             
             if (elementName == "published") {
-                if let date = RSSDateFormatter.publishedDateFormatter().dateFromString(self.currentString) {
+                if let date = RSSDateFormatter.publishedDateFormatter().date(from: self.currentString) {
                     self.feed?.pubDate = date
-                } else if let date = RSSDateFormatter.publishedDateFormatter2().dateFromString(self.currentString) {
+                } else if let date = RSSDateFormatter.publishedDateFormatter2().date(from: self.currentString) {
                     self.feed?.pubDate = date
                 }
             }
             
             if (elementName == "lastBuildDate") {
-                if let date = RSSDateFormatter.rfc822DateFormatter().dateFromString(self.currentString) {
+                if let date = RSSDateFormatter.rfc822DateFormatter().date(from: self.currentString) {
                     self.feed?.lastBuildDate = date
-                } else if let date = RSSDateFormatter.rfc822DateFormatter2().dateFromString(self.currentString) {
+                } else if let date = RSSDateFormatter.rfc822DateFormatter2().date(from: self.currentString) {
                     self.feed?.lastBuildDate = date
                 }
             }
         }
     }
     
-    public func parser(parser: NSXMLParser, foundCharacters string: String) {
-        self.currentString.appendContentsOf(string)
+    public func parser(_ parser: XMLParser, foundCharacters string: String) {
+        self.currentString.append(string)
     }
     
-    public func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
+    public func parser(_ parser: XMLParser, parseErrorOccurred parseError: NSError) {
         self.parseError = parseError
         self.parser?.abortParsing()
     }
@@ -276,30 +276,30 @@ public class AlamofireRSSParser: NSObject, NSXMLParserDelegate {
     Struct containing various `NSDateFormatter` s
 */
 struct RSSDateFormatter {
-    static func rfc822DateFormatter() -> NSDateFormatter {
-        let dateFormatter: NSDateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
+    static func rfc822DateFormatter() -> DateFormatter {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(localeIdentifier: "en_US")
         dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
         return dateFormatter
     }
     
-    static func rfc822DateFormatter2() -> NSDateFormatter {
-        let dateFormatter: NSDateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
+    static func rfc822DateFormatter2() -> DateFormatter {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(localeIdentifier: "en_US")
         dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
         return dateFormatter
     }
     
-    static func publishedDateFormatter() -> NSDateFormatter {
-        let dateFormatter: NSDateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
+    static func publishedDateFormatter() -> DateFormatter {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(localeIdentifier: "en_US")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         return dateFormatter
     }
     
-    static func publishedDateFormatter2() -> NSDateFormatter {
-        let dateFormatter: NSDateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
+    static func publishedDateFormatter2() -> DateFormatter {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(localeIdentifier: "en_US")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssz"
         return dateFormatter
     }

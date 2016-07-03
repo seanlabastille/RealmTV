@@ -17,8 +17,8 @@ public class RSSFeed: CustomStringConvertible {
     public var title: String? = nil
     public var link: String? = nil
     public var feedDescription: String? = nil
-    public var pubDate: NSDate? = nil
-    public var lastBuildDate: NSDate? = nil
+    public var pubDate: Date? = nil
+    public var lastBuildDate: Date? = nil
     public var language: String? = nil
     public var copyright: String? = nil
     public var managingEditor: String? = nil
