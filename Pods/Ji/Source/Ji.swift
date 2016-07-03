@@ -68,7 +68,7 @@ public class Ji {
 			let cSize = CInt(data.count)
 			let cfEncoding = CFStringConvertNSStringEncodingToEncoding(encoding.rawValue)
 			let cfEncodingAsString: CFString = CFStringConvertEncodingToIANACharSetName(cfEncoding)
-			let cEncoding: UnsafePointer<CChar> = CFStringGetCStringPtr(cfEncodingAsString, 0)
+            let cEncoding = String(cfEncodingAsString)
 			
 			if isXML {
 				let options = CInt(XML_PARSE_RECOVER.rawValue)
