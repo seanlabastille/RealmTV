@@ -7,14 +7,14 @@ target 'RealmTV' do
   pod 'AlamofireRSSParser', :podspec => './AlamofireRSSParser.podspec'
   pod 'Ji'
   pod 'AsyncNetwork', :git => 'https://github.com/jhaybie/async-network.git'
-  pod 'Freddy'
+  pod 'Freddy', :git => 'https://github.com/bignerdranch/Freddy.git', :branch => 'swift3'
 end
 
 target 'realmtv-ios' do
     use_frameworks!
     pod 'AlamofireRSSParser', :podspec => './AlamofireRSSParser.podspec'
     pod 'Ji'
-    pod 'Freddy'
-    pod 'Alamofire'
+    pod 'Freddy', :git => 'https://github.com/bignerdranch/Freddy.git', :branch => 'swift3'
+    pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'swift3'
     pod 'AsyncNetwork', :git => 'https://github.com/jhaybie/async-network.git'
 end

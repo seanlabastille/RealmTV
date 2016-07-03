@@ -29,7 +29,7 @@
 /* Begin PBXFileReference section */
 		1409ABA91CFB1C9300E91337 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		140AF6B11CFD556E0027EF9C /* transcriptWrangler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = transcriptWrangler.js; sourceTree = "<group>"; };
-		1430ECDD1CE2EDC300978DBC /* Pipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipeline.swift; sourceTree = "<group>"; };
+		1430ECDD1CE2EDC300978DBC /* Pipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Pipeline.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		14B5D2481CE19B1300BCB79C /* RealmTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealmTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14B5D24B1CE19B1300BCB79C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14B5D24D1CE19B1300BCB79C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -202,6 +202,7 @@
 					14B5D2471CE19B1300BCB79C = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = J3TK74588Q;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 0;
@@ -214,6 +215,7 @@
 					14F468C01CE3C65900CCD55F = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = J3TK74588Q;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
@@ -519,6 +521,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -539,6 +542,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -554,6 +558,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -570,6 +575,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

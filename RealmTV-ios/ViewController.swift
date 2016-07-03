@@ -15,12 +15,12 @@ import Freddy
 
 class ViewController: UIViewController, AsyncClientDelegate {
     var client: AsyncClient?
-    var timer: dispatch_source_t?
+    var timer: DispatchSource?
     var seconds = 0
     
     var webView: WKWebView = {
-        let source = try! String(contentsOfFile: NSBundle.mainBundle().pathForResource("transcriptWrangler", ofType: "js")!)
-        let userScript = WKUserScript(source: source, injectionTime: .AtDocumentEnd, forMainFrameOnly: true)
+        let source = try! String(contentsOfFile: Bundle.main().pathForResource("transcriptWrangler", ofType: "js")!)
+        let userScript = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
@@ -37,44 +37,44 @@ class ViewController: UIViewController, AsyncClientDelegate {
         webView.translatesAutoresizingMaskIntoConstraints = false
         webViewView.addSubview(webView)
         
-        webView.topAnchor.constraintEqualToAnchor(webViewView.topAnchor).active = true
-        webView.bottomAnchor.constraintEqualToAnchor(webViewView.bottomAnchor).active = true
-        webView.leadingAnchor.constraintEqualToAnchor(webViewView.leadingAnchor).active = true
-        webView.trailingAnchor.constraintEqualToAnchor(webViewView.trailingAnchor).active = true
+        webView.topAnchor.constraint(equalTo: webViewView.topAnchor).isActive = true
+        webView.bottomAnchor.constraint(equalTo: webViewView.bottomAnchor).isActive = true
+        webView.leadingAnchor.constraint(equalTo: webViewView.leadingAnchor).isActive = true
+        webView.trailingAnchor.constraint(equalTo: webViewView.trailingAnchor).isActive = true
         
         webView.loadHTMLString("<h1 style='font: -apple-system-headline;'>Talk transcript will be shown here</h1>", baseURL: nil)
         navigationItem.prompt = "Choose a talk on your TV to get started"
     }
     
-    func client(theClient: AsyncClient!, didFindService service: NSNetService!, moreComing: Bool) -> Bool {
+    func client(_ theClient: AsyncClient!, didFind service: NetService!, moreComing: Bool) -> Bool {
         print("\(theClient) \(service) \(moreComing)")
         return true
     }
     
-    func client(theClient: AsyncClient!, didConnect connection: AsyncConnection!) {
+    func client(_ theClient: AsyncClient!, didConnect connection: AsyncConnection!) {
         print("\(theClient) \(connection)")
     }
     
-    func client(theClient: AsyncClient!, didDisconnect connection: AsyncConnection!) {
+    func client(_ theClient: AsyncClient!, didDisconnect connection: AsyncConnection!) {
         print("\(#function) \(theClient) \(connection)")
         client = AsyncClient()
         client?.delegate = self
         client?.start()
     }
     
-    func client(theClient: AsyncClient!, didReceiveCommand command: AsyncCommand, object: AnyObject!, connection: AsyncConnection!) {
+    func client(_ theClient: AsyncClient!, didReceiveCommand command: AsyncCommand, object: AnyObject!, connection: AsyncConnection!) {
         print("\(theClient) \(command) \(object) \(connection)")
         if let object = object as? [String: AnyObject],
-           talkData = object["talk-begin"] as? NSData,
+           talkData = object["talk-begin"] as? Data,
             item = try? FeedItem(json: JSON(data: talkData)) {
             navigationItem.prompt = nil
             title = item.title
-            webView.loadRequest(NSURLRequest(URL: item.url))
+            webView.load(URLRequest(url: item.url))
         }
         
         if let object = object as? [String: AnyObject],
-            talkCurrentTime = object["talk-time"] as? NSTimeInterval {
-            if transcriptShouldFollowSwitch.on { self.webView.evaluateJavaScript("scrollToTranscriptHeaderForTime(\(talkCurrentTime))", completionHandler: nil)
+            talkCurrentTime = object["talk-time"] as? TimeInterval {
+            if transcriptShouldFollowSwitch.isOn { self.webView.evaluateJavaScript("scrollToTranscriptHeaderForTime(\(talkCurrentTime))", completionHandler: nil)
             }
             navigationItem.prompt = "\(talkCurrentTime)"
         }
@@ -84,11 +84,11 @@ class ViewController: UIViewController, AsyncClientDelegate {
     @IBOutlet weak var slideSizeSegmentedControl: UISegmentedControl!
     @IBOutlet weak var transcriptShouldFollowSwitch: UISwitch!
     
-    @IBAction func slideControlValueChanged(sender: AnyObject) {
+    @IBAction func slideControlValueChanged(_ sender: AnyObject) {
             client?.sendCommand(1, object: ["slide-position": slidePositionSegmentedControl.selectedSegmentIndex, "slide-size": slideSizeSegmentedControl.selectedSegmentIndex])
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         
         client = AsyncClient()
