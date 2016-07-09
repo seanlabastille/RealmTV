@@ -291,10 +291,14 @@ public class JiNode {
 		
 		xPathContext?.pointee.node = self.xmlNode
 		
-		let xPathObject = xmlXPathEvalExpression(UnsafePointer<xmlChar>(xPath.cString(using: String.Encoding.utf8)!), xPathContext)
+		let xPathObject = xmlXPathEvalExpression(xPath, xPathContext)
+        let error = xmlGetLastError()
 		xmlXPathFreeContext(xPathContext)
 		if xPathObject == nil {
 			// Unable to evaluate XPath.
+            if error != nil {
+                dump(error)
+            }
 			return []
 		}
 		

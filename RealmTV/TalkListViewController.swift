@@ -10,7 +10,7 @@ import UIKit
 import AVKit
 import AsyncNetwork
 
-class ViewController: UIViewController {
+class ViewController: UITableViewController {
     static var talksFetched = false
     @IBOutlet weak var talksPosterImageView: UIImageView!
     @IBOutlet weak var talksTitleLabel: UILabel!
@@ -55,16 +55,17 @@ class ViewController: UIViewController {
             return item1.date.compare(item2.date) != .orderedAscending
         }
         self.items = items
-        self.talksTableView.reloadData()
+        self.tableView.reloadData()
     }
 }
 
-extension ViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+extension ViewController { // MARK: UITableViewDelegate
+    override func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if let nextFocusedIndexPath = context.nextFocusedIndexPath where
         (nextFocusedIndexPath as NSIndexPath).row < items.count,
             let item = Optional.some(items[(nextFocusedIndexPath as NSIndexPath).row]) {
-            talksTitleLabel.text = item.title
+            // FIXME: Tell detail view controller about focused talk
+            /*talksTitleLabel.text = item.title
             talkDescriptionLabel.text = item.description
             DispatchQueue.global(attributes: [DispatchQueue.GlobalAttributes.qosUserInitiated]).async {
                 if let slide = item.talk?[slide: 0] {
@@ -72,11 +73,11 @@ extension ViewController: UITableViewDelegate {
                         self.talksPosterImageView.image = slide
                     }
                 }
-            }
+            }*/
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath as NSIndexPath).row < items.count && items[(indexPath as NSIndexPath).row].talk != nil  {
             let feedItem = items[(indexPath as NSIndexPath).row]
             let talkViewController = TalkViewController(feedItem: feedItem)
@@ -91,12 +92,12 @@ extension ViewController: UITableViewDelegate {
     }
 }
 
-extension ViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension ViewController { // MARK: UITableViewDataSource
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "talk"),
                itemIndex = Optional.some((indexPath as NSIndexPath).row) where itemIndex < items.count {
             cell.textLabel?.text = items[itemIndex].title
