@@ -10,17 +10,18 @@ import UIKit
 import AVKit
 import AsyncNetwork
 
-class ViewController: UITableViewController {
+class TalkListViewController: UITableViewController {
     static var talksFetched = false
-    @IBOutlet weak var talksPosterImageView: UIImageView!
-    @IBOutlet weak var talksTitleLabel: UILabel!
-    @IBOutlet weak var talkDescriptionLabel: UILabel!
-    @IBOutlet weak var talksTableView: UITableView!
     
     var server: AsyncServer?
     var items = [FeedItem]()
     var connections = [AsyncConnection]()
     var onceToken = Int()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        title = "Realm TV"
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -35,15 +36,15 @@ class ViewController: UITableViewController {
     
     // MARK: Realm talk feed processing
     func fetchTalks() {
-        if !ViewController.talksFetched {
+        if !TalkListViewController.talksFetched {
             realmFeedItems { items in
-                items.prefix(upTo: 50).forEach { item in
+                items.prefix(upTo: 100).forEach { item in
                     DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosUserInitiated).async {
                         item.addTalkDetails(self.itemWithTalkDetailsHandler)
                     }
                 }
             }
-            ViewController.talksFetched = true
+            TalkListViewController.talksFetched = true
         }
     }
     
@@ -59,21 +60,15 @@ class ViewController: UITableViewController {
     }
 }
 
-extension ViewController { // MARK: UITableViewDelegate
+extension TalkListViewController { // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if let nextFocusedIndexPath = context.nextFocusedIndexPath where
         (nextFocusedIndexPath as NSIndexPath).row < items.count,
             let item = Optional.some(items[(nextFocusedIndexPath as NSIndexPath).row]) {
-            // FIXME: Tell detail view controller about focused talk
-            /*talksTitleLabel.text = item.title
-            talkDescriptionLabel.text = item.description
-            DispatchQueue.global(attributes: [DispatchQueue.GlobalAttributes.qosUserInitiated]).async {
-                if let slide = item.talk?[slide: 0] {
-                    DispatchQueue.main.async {
-                        self.talksPosterImageView.image = slide
-                    }
-                }
-            }*/
+            if let detailNavigationController = self.splitViewController?.viewControllers[1] as? UINavigationController,
+                   detailViewController = detailNavigationController.viewControllers.first as? TalkDetailViewController {
+                detailViewController.feedItem = item
+            }
         }
     }
     
@@ -92,7 +87,7 @@ extension ViewController { // MARK: UITableViewDelegate
     }
 }
 
-extension ViewController { // MARK: UITableViewDataSource
+extension TalkListViewController { // MARK: UITableViewDataSource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
@@ -108,7 +103,7 @@ extension ViewController { // MARK: UITableViewDataSource
     }
 }
 
-extension ViewController: TalkViewControllerDelegate {
+extension TalkListViewController: TalkViewControllerDelegate {
     func talkCurrentTimeChanged(_ talkViewController: TalkViewController, currentTime: TimeInterval) {
         connections.forEach { connection in
             if connection.connected {
@@ -122,7 +117,7 @@ public func /= ( sizeToScale: inout CGSize, denominator: CGFloat) {
     sizeToScale = CGSize(width: sizeToScale.width/denominator, height: sizeToScale.height/denominator)
 }
 
-extension ViewController: AsyncServerDelegate {
+extension TalkListViewController: AsyncServerDelegate {
     func server(_ theServer: AsyncServer!, didConnect connection: AsyncConnection!) {
         connections.append(connection)
     }
@@ -135,9 +130,10 @@ extension ViewController: AsyncServerDelegate {
     
     func server(_ theServer: AsyncServer!, didReceiveCommand command: AsyncCommand, object: AnyObject!, connection: AsyncConnection!) {
         print("\(theServer) \(command) \(object) \(connection)")
-        if command == 1 {
+        switch command {
+        case 1:
             if let tvc = presentedViewController as? TalkViewController {
-                var slideSize = self.view.bounds.size
+                var slideSize = UIApplication.shared().keyWindow!.bounds.size // FIXME
                 switch String(object["slide-size"] as! NSNumber) {
                 case "1":
                     slideSize /= 4
@@ -163,6 +159,15 @@ extension ViewController: AsyncServerDelegate {
                     break
                 }
             }
+            
+        case 2:
+                if let tvc = presentedViewController as? TalkViewController {
+                    if let speed = object["playback-speed"] as? Float {
+                        tvc.player?.rate = speed
+                    }
+            }
+        default:
+            break
         }
     }
 }

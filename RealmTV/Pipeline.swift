@@ -173,16 +173,16 @@ extension FeedItem {
             request.addValue("\(videoURL)", forHTTPHeaderField: "Referer")
             Alamofire.request(request).response { (request,response,responseData,error) in
                 let responseString = String(data: responseData!, encoding: String.Encoding.utf8)!
-                let iFrameInitRegex = try! RegularExpression(pattern: "Wistia\\.iframeInit\\((\\{.*), \\{\\}\\)", options: [])
+                let iFrameInitRegex = try! RegularExpression(pattern: "Wistia\\.iframeInit\\((\\{.*), \\{\\}\\)", options: []) // FIXME: This might not always match anymore :/
                 let matches = iFrameInitRegex.matches(in: responseString, options: [], range: NSMakeRange(0, responseString.characters.count))
                 //dump(matches)
                 if let firstMatch = matches.first {
                     let matchStartIndex = responseString.index(responseString.startIndex, offsetBy: firstMatch.range(at: 1).location)
                     let matchEndIndex = responseString.index(responseString.startIndex, offsetBy: NSMaxRange(firstMatch.range(at: 1)))
                     let iframeInitJSON = responseString.substring(with: matchStartIndex..<matchEndIndex).data(using: String.Encoding.utf8)
-                    let json = try! JSONSerialization.jsonObject(with: iframeInitJSON!, options: [])
+                    let json = try? JSONSerialization.jsonObject(with: iframeInitJSON!, options: [])
                     // display_name: "1080p"
-                    if let assets = json["assets"] as? Array<AnyObject> {
+                    if let assets = json?["assets"] as? Array<AnyObject> {
                         let a1080pAssets = assets.filter { asset in
                             if let displayName = asset["display_name"] as? String {
                                 return displayName == "1080p"

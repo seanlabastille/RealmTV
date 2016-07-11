@@ -68,7 +68,7 @@ public class Ji {
 			let cSize = CInt(data.count)
 			let cfEncoding = CFStringConvertNSStringEncodingToEncoding(encoding.rawValue)
 			let cfEncodingAsString: CFString = CFStringConvertEncodingToIANACharSetName(cfEncoding)
-            let cEncoding = String(cfEncodingAsString)
+            let cEncoding = "utf-8" //String(cfEncodingAsString)
 			
 			if isXML {
 				let options = CInt(XML_PARSE_RECOVER.rawValue)

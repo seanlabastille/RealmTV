@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JmU-su-RC3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11163.2" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="JmU-su-RC3">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11133"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -15,15 +16,13 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="xrE-80-O6f">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g3U-8w-Ze1">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                 </subviews>
                                 <constraints>
@@ -31,7 +30,7 @@
                                 </constraints>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="xrE-80-O6f" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="NFx-RN-B3m"/>
                             <constraint firstItem="xrE-80-O6f" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="RaO-V9-JCS"/>
@@ -62,13 +61,14 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <exit id="fjq-z2-4At" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1003" y="191"/>
+            <point key="canvasLocation" x="948" y="-165"/>
         </scene>
-        <!--View Controller-->
+        <!--Playback Controls-->
         <scene sceneID="5Dh-1O-FgH">
             <objects>
-                <viewController id="Aal-NB-E3F" sceneMemberID="viewController">
+                <viewController title="Playback Controls" id="Aal-NB-E3F" customClass="PlaybackControlsViewController" customModule="realmtv_ios" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oef-tS-fEO"/>
                         <viewControllerLayoutGuide type="bottom" id="IeA-yx-yBm"/>
@@ -77,20 +77,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="430"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="neY-oA-Dia">
-                                <rect key="frame" x="20" y="64" width="200" height="366"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="neY-oA-Dia">
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="7yv-nK-zN9">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="307"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="7yv-nK-zN9">
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" ambiguous="YES" misplaced="YES" text="Slide Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uZj-7m-vF9">
-                                                <rect key="frame" x="0.0" y="144" width="74" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" text="Slide Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uZj-7m-vF9">
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="WdK-4Z-hjs">
-                                                <rect key="frame" x="94" y="140" width="106" height="29"/>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="WdK-4Z-hjs">
                                                 <segments>
                                                     <segment title="None"/>
                                                     <segment title="Small"/>
@@ -98,22 +94,22 @@
                                                     <segment title="Large"/>
                                                 </segments>
                                                 <connections>
-                                                    <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="ec3-cS-qgP"/>
+                                                    <action selector="slideControlValueChanged:" destination="Aal-NB-E3F" eventType="valueChanged" id="Sfa-dz-wwr"/>
                                                 </connections>
                                             </segmentedControl>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" secondItem="WdK-4Z-hjs" secondAttribute="height" id="CRB-jg-4al"/>
+                                        </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="QbL-tJ-gfI">
-                                        <rect key="frame" x="0.0" y="307" width="200" height="28"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="QbL-tJ-gfI">
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" text="Slide Position" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRG-mt-n6N">
-                                                <rect key="frame" x="0.0" y="4" width="103" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Slide Position" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRG-mt-n6N">
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <segmentedControl opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="252" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="vbw-l1-oXe">
-                                                <rect key="frame" x="123" y="0.0" width="77" height="29"/>
+                                            <segmentedControl opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="252" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="3" translatesAutoresizingMaskIntoConstraints="NO" id="vbw-l1-oXe">
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="190" id="JSg-6M-72D"/>
                                                 </constraints>
@@ -124,28 +120,53 @@
                                                     <segment title="" image="Bottom Right"/>
                                                 </segments>
                                                 <connections>
-                                                    <action selector="slideControlValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="hVe-zt-eSw"/>
+                                                    <action selector="slideControlValueChanged:" destination="Aal-NB-E3F" eventType="valueChanged" id="MQo-SQ-f6w"/>
                                                 </connections>
                                             </segmentedControl>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" secondItem="vbw-l1-oXe" secondAttribute="height" id="5gh-7x-5oJ"/>
+                                        </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="P8z-TR-VMK">
-                                        <rect key="frame" x="0.0" y="335" width="200" height="31"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="P8z-TR-VMK">
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Transcript follows video progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h9d-F0-Gb8">
-                                                <rect key="frame" x="0.0" y="6" width="131" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Transcript follows video progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h9d-F0-Gb8">
+                                                <frame key="frameInset" minY="5" width="253" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F9H-pc-RTN">
-                                                <rect key="frame" x="151" y="0.0" width="51" height="31"/>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F9H-pc-RTN">
+                                                <connections>
+                                                    <action selector="transcriptShouldFollowSwitchToggled:" destination="Aal-NB-E3F" eventType="valueChanged" id="XED-LZ-0L8"/>
+                                                </connections>
                                             </switch>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" secondItem="F9H-pc-RTN" secondAttribute="height" id="lyF-j1-vqj"/>
+                                        </constraints>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="H0W-Dj-xnr">
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Playback Speed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Afr-vV-DzK">
+                                                <frame key="frameInset" minY="5" width="67" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.5" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="6Ig-ZR-Xba">
+                                                <frame key="frameInset" minX="85" width="477" height="31"/>
+                                                <connections>
+                                                    <action selector="playBackSpeedSliderValueChanged:" destination="Aal-NB-E3F" eventType="valueChanged" id="Nl8-0u-t4I"/>
+                                                </connections>
+                                            </slider>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="6Ig-ZR-Xba" firstAttribute="leading" secondItem="Afr-vV-DzK" secondAttribute="trailing" constant="20" id="XKc-Zc-qpi"/>
+                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="3dO-2y-4Pe"/>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="400" id="dnr-VO-7wH"/>
                                     <constraint firstAttribute="height" constant="366" id="qzc-cU-LNC"/>
                                 </constraints>
@@ -156,26 +177,36 @@
                                 </variation>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="neY-oA-Dia" firstAttribute="top" secondItem="oef-tS-fEO" secondAttribute="bottom" id="DVe-kJ-Bb5"/>
                             <constraint firstItem="neY-oA-Dia" firstAttribute="leading" secondItem="oZH-91-Js3" secondAttribute="leadingMargin" id="HUF-Ju-IVk"/>
-                            <constraint firstItem="IeA-yx-yBm" firstAttribute="top" secondItem="neY-oA-Dia" secondAttribute="bottom" id="a8D-hT-h1d"/>
+                            <constraint firstItem="neY-oA-Dia" firstAttribute="centerY" secondItem="oZH-91-Js3" secondAttribute="centerY" id="OIf-eg-LuD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="neY-oA-Dia" secondAttribute="trailing" id="zAE-cr-f60"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="fnM-7y-tNQ"/>
+                    <navigationItem key="navigationItem" id="fnM-7y-tNQ">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="4R5-DC-mgX">
+                            <connections>
+                                <segue destination="fjq-z2-4At" kind="unwind" unwindAction="unwindToTranscriptWithSender:" id="3c9-PS-Mbr"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="600" height="430"/>
+                    <connections>
+                        <outlet property="slidePositionSegmentedControl" destination="vbw-l1-oXe" id="74v-8s-BHT"/>
+                        <outlet property="slideSizeSegmentedControl" destination="WdK-4Z-hjs" id="bjf-F9-87q"/>
+                        <outlet property="transcriptShouldFollowSwitch" destination="F9H-pc-RTN" id="SCc-CF-b91"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WoT-LK-Twe" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <view contentMode="scaleToFill" id="e9j-nU-t8H">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="2414" y="-320"/>
+            <point key="canvasLocation" x="2696" y="-218"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="C53-jB-3gj">
@@ -211,7 +242,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kqd-8Q-xzA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1692" y="-224"/>
+            <point key="canvasLocation" x="1871" y="-165"/>
         </scene>
     </scenes>
     <resources>

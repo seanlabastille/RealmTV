@@ -17,9 +17,10 @@ class ViewController: UIViewController, AsyncClientDelegate {
     var client: AsyncClient?
     var timer: DispatchSource?
     var seconds = 0
+    var transcriptShouldFollow = true
     
     var webView: WKWebView = {
-        let source = try! String(contentsOfFile: Bundle.main().pathForResource("transcriptWrangler", ofType: "js")!)
+        let source = try! String(contentsOfFile: Bundle.main.pathForResource("transcriptWrangler", ofType: "js")!)
         let userScript = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         
         let userContentController = WKUserContentController()
@@ -74,18 +75,20 @@ class ViewController: UIViewController, AsyncClientDelegate {
         
         if let object = object as? [String: AnyObject],
             talkCurrentTime = object["talk-time"] as? TimeInterval {
-            if transcriptShouldFollowSwitch.isOn { self.webView.evaluateJavaScript("scrollToTranscriptHeaderForTime(\(talkCurrentTime))", completionHandler: nil)
+            if transcriptShouldFollow { self.webView.evaluateJavaScript("scrollToTranscriptHeaderForTime(\(talkCurrentTime))", completionHandler: nil)
             }
             navigationItem.prompt = "\(talkCurrentTime)"
         }
     }
     
-    @IBOutlet weak var slidePositionSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var slideSizeSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var transcriptShouldFollowSwitch: UISwitch!
+    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let playbackControlsVC = segue.destinationViewController.childViewControllers.first as? PlaybackControlsViewController {
+            playbackControlsVC.delegate = self
+        }
+    }
     
-    @IBAction func slideControlValueChanged(_ sender: AnyObject) {
-            client?.sendCommand(1, object: ["slide-position": slidePositionSegmentedControl.selectedSegmentIndex, "slide-size": slideSizeSegmentedControl.selectedSegmentIndex])
+    @IBAction func unwindToTranscript(sender: UIStoryboardSegue) {
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -94,6 +97,20 @@ class ViewController: UIViewController, AsyncClientDelegate {
         client = AsyncClient()
         client?.delegate = self
         client?.start()
+    }
+}
+
+extension ViewController: PlaybackControlsViewControllerDelegate {
+    func updateSlide(attributes: [String: Int]) {
+         client?.sendCommand(1, object: attributes)
+    }
+    
+    func toggleTranscript(followsVideoProgress: Bool) {
+        transcriptShouldFollow = followsVideoProgress
+    }
+    
+    func adjustPlayback(speed: Float) {
+        client?.sendCommand(2, object: ["playback-speed": speed])
     }
 }
 
