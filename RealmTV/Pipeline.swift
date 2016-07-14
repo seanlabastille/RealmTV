@@ -173,13 +173,14 @@ extension FeedItem {
             request.addValue("\(videoURL)", forHTTPHeaderField: "Referer")
             Alamofire.request(request).response { (request,response,responseData,error) in
                 let responseString = String(data: responseData!, encoding: String.Encoding.utf8)!
-                let iFrameInitRegex = try! RegularExpression(pattern: "Wistia\\.iframeInit\\((\\{.*), \\{\\}\\)", options: []) // FIXME: This might not always match anymore :/
-                let matches = iFrameInitRegex.matches(in: responseString, options: [], range: NSMakeRange(0, responseString.characters.count))
-                //dump(matches)
+                let jiDoc = Ji(htmlString: responseString)
+                if let scriptContent = jiDoc?.xPath("//script")?[2].content {
+                let iFrameInitRegex = try! RegularExpression(pattern: "Wistia\\.iframeInit\\((\\{.*\\}\\}), \\{\\}\\);$", options: [.anchorsMatchLines])
+                let matches = iFrameInitRegex.matches(in: scriptContent, options: [], range: NSMakeRange(0, scriptContent.characters.count))
                 if let firstMatch = matches.first {
-                    let matchStartIndex = responseString.index(responseString.startIndex, offsetBy: firstMatch.range(at: 1).location)
-                    let matchEndIndex = responseString.index(responseString.startIndex, offsetBy: NSMaxRange(firstMatch.range(at: 1)))
-                    let iframeInitJSON = responseString.substring(with: matchStartIndex..<matchEndIndex).data(using: String.Encoding.utf8)
+                    let matchStartIndex = scriptContent.index(scriptContent.startIndex, offsetBy: firstMatch.range(at: 1).location)
+                    let matchEndIndex = scriptContent.index(scriptContent.startIndex, offsetBy: NSMaxRange(firstMatch.range(at: 1)))
+                    let iframeInitJSON = scriptContent.substring(with: matchStartIndex..<matchEndIndex).data(using: String.Encoding.utf8)
                     let json = try? JSONSerialization.jsonObject(with: iframeInitJSON!, options: [])
                     // display_name: "1080p"
                     if let assets = json?["assets"] as? Array<AnyObject> {
@@ -194,7 +195,10 @@ extension FeedItem {
                                urlString = firstAsset["url"] as? String {
                             completion(URL(string: urlString))
                         }
+                    }  else {
+                        dump(responseString)
                     }
+                }
                 }
             }
         default:
