@@ -107,6 +107,11 @@ extension TalkListViewController: TalkViewControllerDelegate {
     func talkCurrentTimeChanged(_ talkViewController: TalkViewController, currentTime: TimeInterval) {
         connections.forEach { connection in
             if connection.connected {
+                if currentTime.truncatingRemainder(dividingBy: 5) == 0 {
+                    if let selectedIndexPath = tableView.indexPathForSelectedRow {
+                    connection.sendCommand(2, object: NSDictionary(dictionary: ["talk-begin": try! items[selectedIndexPath.row].toJSON().serialize() ?? "missing talk id"]))
+                    }
+                }
                 connection.sendCommand(3, object: ["talk-time": currentTime])
             }
         }

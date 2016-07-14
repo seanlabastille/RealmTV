@@ -63,7 +63,7 @@ class TalkViewController : AVPlayerViewController {
                         }
                     }
                 }
-                timer.scheduleOneshot(deadline: DispatchTime.now())
+                timer.scheduleRepeating(deadline: DispatchTime.now(), interval: .seconds(1))
                 timer.resume()
             }
             player?.play()
