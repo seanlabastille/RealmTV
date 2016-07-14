@@ -27,6 +27,7 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="g3U-8w-Ze1" firstAttribute="width" secondItem="xrE-80-O6f" secondAttribute="width" id="Uqz-6H-dEh"/>
+                                    <constraint firstItem="g3U-8w-Ze1" firstAttribute="height" secondItem="xrE-80-O6f" secondAttribute="height" id="VYD-s0-OuZ"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -47,9 +48,7 @@
                     <navigationItem key="navigationItem" id="jiJ-0R-TqN">
                         <barButtonItem key="rightBarButtonItem" title="Playback Controls" id="QmY-Df-zoP">
                             <connections>
-                                <segue destination="R0v-CC-RqD" kind="popoverPresentation" popoverAnchorBarButtonItem="QmY-Df-zoP" id="mgp-lX-TCE">
-                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                </segue>
+                                <action selector="presentPlaybackControls:" destination="BYZ-38-t0r" id="02b-rA-Wul"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -130,8 +129,7 @@
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="P8z-TR-VMK">
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Transcript follows video progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h9d-F0-Gb8">
-                                                <frame key="frameInset" minY="5" width="253" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transcript follows video progress" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h9d-F0-Gb8">
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -149,13 +147,13 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="H0W-Dj-xnr">
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Playback Speed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Afr-vV-DzK">
-                                                <frame key="frameInset" minY="5" width="67" height="21"/>
+                                                <frame key="frameInset" minY="5" width="22" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.5" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="6Ig-ZR-Xba">
-                                                <frame key="frameInset" minX="85" width="477" height="31"/>
+                                                <frame key="frameInset" minX="40" width="522" height="31"/>
                                                 <connections>
                                                     <action selector="playBackSpeedSliderValueChanged:" destination="Aal-NB-E3F" eventType="valueChanged" id="Nl8-0u-t4I"/>
                                                 </connections>
@@ -206,7 +204,7 @@
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
             </objects>
-            <point key="canvasLocation" x="2696" y="-218"/>
+            <point key="canvasLocation" x="3171" y="-173"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="C53-jB-3gj">
@@ -229,7 +227,7 @@
         <!--Navigation Controller-->
         <scene sceneID="zgN-mL-PDc">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="R0v-CC-RqD" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="playbackControls" automaticallyAdjustsScrollViewInsets="NO" id="R0v-CC-RqD" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ixl-RU-ZoM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

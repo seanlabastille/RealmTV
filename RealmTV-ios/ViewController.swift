@@ -18,6 +18,7 @@ class ViewController: UIViewController, AsyncClientDelegate {
     var timer: DispatchSource?
     var seconds = 0
     var transcriptShouldFollow = true
+    var playbackControlsNavigationController: UIViewController?
     
     var webView: WKWebView = {
         let source = try! String(contentsOfFile: Bundle.main.pathForResource("transcriptWrangler", ofType: "js")!)
@@ -68,9 +69,11 @@ class ViewController: UIViewController, AsyncClientDelegate {
         if let object = object as? [String: AnyObject],
            talkData = object["talk-begin"] as? Data,
             item = try? FeedItem(json: JSON(data: talkData)) {
-            navigationItem.prompt = nil
-            title = item.title
-            webView.load(URLRequest(url: item.url))
+            if item.url != webView.url {
+                navigationItem.prompt = nil
+                title = item.title
+                webView.load(URLRequest(url: item.url))
+            }
         }
         
         if let object = object as? [String: AnyObject],
@@ -81,10 +84,15 @@ class ViewController: UIViewController, AsyncClientDelegate {
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let playbackControlsVC = segue.destinationViewController.childViewControllers.first as? PlaybackControlsViewController {
-            playbackControlsVC.delegate = self
+    @IBAction func presentPlaybackControls(_ sender: AnyObject) {
+        playbackControlsNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "playbackControls")
+        guard let playbackControlsNavigationController = playbackControlsNavigationController else { return }
+        playbackControlsNavigationController.modalPresentationStyle = .custom
+        playbackControlsNavigationController.transitioningDelegate = self
+        if let playbackControlsViewController = playbackControlsNavigationController.childViewControllers.first as? PlaybackControlsViewController {
+            playbackControlsViewController.delegate = self
         }
+        present(playbackControlsNavigationController, animated: true, completion: nil)
     }
     
     @IBAction func unwindToTranscript(sender: UIStoryboardSegue) {
@@ -97,6 +105,24 @@ class ViewController: UIViewController, AsyncClientDelegate {
         client = AsyncClient()
         client?.delegate = self
         client?.start()
+    }
+}
+
+class PartialPresentationSegue: UIStoryboardSegue {
+    override func perform() {
+        sourceViewController.present(destinationViewController, animated: true, completion: nil)
+    }
+}
+
+private class PartialPresentationController: UIPresentationController {
+    private override func frameOfPresentedViewInContainerView() -> CGRect {
+        return CGRect(x: 0, y: 300, width: presentingViewController.view.frame.width, height: 300) // TODO: Be more adaptive
+    }
+}
+
+extension ViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return PartialPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
 
