@@ -36,6 +36,7 @@ class ViewController: UIViewController, AsyncClientDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        automaticallyAdjustsScrollViewInsets = false
         webView.translatesAutoresizingMaskIntoConstraints = false
         webViewView.addSubview(webView)
         
@@ -43,8 +44,7 @@ class ViewController: UIViewController, AsyncClientDelegate {
         webView.bottomAnchor.constraint(equalTo: webViewView.bottomAnchor).isActive = true
         webView.leadingAnchor.constraint(equalTo: webViewView.leadingAnchor).isActive = true
         webView.trailingAnchor.constraint(equalTo: webViewView.trailingAnchor).isActive = true
-        
-        webView.loadHTMLString("<h1 style='font: -apple-system-headline;'>Talk transcript will be shown here</h1>", baseURL: nil)
+        webView.loadHTMLString("<h1 style='font: -apple-system-headline; font-size: 32pt;'>Talk transcript will be shown here</h1>", baseURL: nil)
         navigationItem.prompt = "Choose a talk on your TV to get started"
     }
     
