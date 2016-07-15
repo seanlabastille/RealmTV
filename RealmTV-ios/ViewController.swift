@@ -116,7 +116,8 @@ class PartialPresentationSegue: UIStoryboardSegue {
 
 private class PartialPresentationController: UIPresentationController {
     private override func frameOfPresentedViewInContainerView() -> CGRect {
-        return CGRect(x: 0, y: 300, width: presentingViewController.view.frame.width, height: 300) // TODO: Be more adaptive
+        let height = CGFloat(300.0)
+        return CGRect(x: 0, y: presentingViewController.view.frame.height-height, width: presentingViewController.view.frame.width, height: height)
     }
 }
 
