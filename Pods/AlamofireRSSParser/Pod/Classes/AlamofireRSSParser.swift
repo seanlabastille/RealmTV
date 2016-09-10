@@ -9,22 +9,23 @@
 import Foundation
 import Alamofire
 
-extension Request {
+extension DataRequest {
     /**
         Creates a response serializer that returns an `RSSFeed` object initialized from the response data.
      
         - Returns: An RSS response serializer.
      */
-    public static func RSSResponseSerializer() -> ResponseSerializer<RSSFeed, NSError> {
-        return ResponseSerializer { request, response, data, error in
+    public static func RSSResponseSerializer() -> DataResponseSerializer<RSSFeed> {
+        return DataResponseSerializer { request, response, data, error in
             guard error == nil else {
                 return .failure(error!)
             }
             
             guard let validData = data else {
                 let failureReason = "Data could not be serialized. Input data was nil."
-                let error = Error.errorWithCode(.dataSerializationFailed, failureReason: failureReason)
-                return .failure(error)
+//                let error = NSError(code: .dataSerializationFailed, failureReason: failureReason)
+                let e = NSError(domain: "X", code: 42, userInfo: nil)
+                return .failure(e)
             }
             
             let parser = AlamofireRSSParser(data: validData)
@@ -47,13 +48,30 @@ extension Request {
     
         - Returns: The request.
     */
-    public func responseRSS(_ completionHandler: (Response<RSSFeed, NSError>) -> Void) -> Self {
-        return response(responseSerializer: Request.RSSResponseSerializer(), completionHandler: completionHandler)
-    }
-    
-    //public func responseRSS(parser parser: AlamofireRSSParser?, completionHandler: Response<RSSFeed, NSError> -> Void) -> Self {
+//    public func RSS(_ completionHandler: (Result<RSSFeed>) -> Void) -> Self {
+//        return response(responseSerializer: Request.RSSResponseSerializer(), completionHandler: completionHandler)
+//    }
+
+    @discardableResult
+    public func responseRSS(
+        queue: DispatchQueue? = nil,
+        completionHandler: @escaping (Result<RSSFeed>) -> Void) {
+            let error = NSError(domain: "", code: 0, userInfo: nil)
+            self.responseData(queue: queue, completionHandler: { (data) in
+                if let data = data.data {
+                let parser = AlamofireRSSParser(data: data)
+                let parsedResults = parser.parse()
+                if let feed = parsedResults.0 {
+                    completionHandler(Result.success(feed))
+                } else {
+                    completionHandler(Result.failure(error))
+                    }
+                }
+            })
+//        Request.RSSResponseSerializer().serializeResponse
+//        Request.RSSResponseSerializer()
     //  return response(responseSerializer: Request.RSSResponseSerializer(parser), completionHandler: completionHandler)
-    //}
+    }
 }
 
 
@@ -233,7 +251,7 @@ public class AlamofireRSSParser: NSObject, XMLParserDelegate {
             }
             
             if (elementName == "ttl") {
-                self.feed?.ttl = Int(self.currentString)
+                self.feed?.ttl = 0//Int(self.currentString)
             }
             
             if (elementName == "pubDate") {
@@ -278,28 +296,28 @@ public class AlamofireRSSParser: NSObject, XMLParserDelegate {
 struct RSSDateFormatter {
     static func rfc822DateFormatter() -> DateFormatter {
         let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(localeIdentifier: "en_US")
+        dateFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
         return dateFormatter
     }
     
     static func rfc822DateFormatter2() -> DateFormatter {
         let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(localeIdentifier: "en_US")
+        dateFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss z"
         return dateFormatter
     }
     
     static func publishedDateFormatter() -> DateFormatter {
         let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(localeIdentifier: "en_US")
+        dateFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         return dateFormatter
     }
     
     static func publishedDateFormatter2() -> DateFormatter {
         let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(localeIdentifier: "en_US")
+        dateFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssz"
         return dateFormatter
     }

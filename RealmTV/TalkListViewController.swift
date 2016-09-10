@@ -39,7 +39,7 @@ class TalkListViewController: UITableViewController {
         if !TalkListViewController.talksFetched {
             realmFeedItems { items in
                 items.prefix(upTo: 100).forEach { item in
-                    DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosUserInitiated).async {
+                    DispatchQueue.global(qos: .userInitiated).async {
                         item.addTalkDetails(self.itemWithTalkDetailsHandler)
                     }
                 }
@@ -62,11 +62,11 @@ class TalkListViewController: UITableViewController {
 
 extension TalkListViewController { // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if let nextFocusedIndexPath = context.nextFocusedIndexPath where
+        if let nextFocusedIndexPath = context.nextFocusedIndexPath ,
         (nextFocusedIndexPath as NSIndexPath).row < items.count,
             let item = Optional.some(items[(nextFocusedIndexPath as NSIndexPath).row]) {
             if let detailNavigationController = self.splitViewController?.viewControllers[1] as? UINavigationController,
-                   detailViewController = detailNavigationController.viewControllers.first as? TalkDetailViewController {
+                   let detailViewController = detailNavigationController.viewControllers.first as? TalkDetailViewController {
                 detailViewController.feedItem = item
             }
         }
@@ -94,7 +94,7 @@ extension TalkListViewController { // MARK: UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "talk"),
-               itemIndex = Optional.some((indexPath as NSIndexPath).row) where itemIndex < items.count {
+               let itemIndex = Optional.some((indexPath as NSIndexPath).row) , itemIndex < items.count {
             cell.textLabel?.text = items[itemIndex].title
             cell.detailTextLabel?.text = items[itemIndex].description
             return cell
@@ -109,10 +109,19 @@ extension TalkListViewController: TalkViewControllerDelegate {
             if connection.connected {
                 if currentTime.truncatingRemainder(dividingBy: 5) == 0 {
                     if let selectedIndexPath = tableView.indexPathForSelectedRow {
-                    connection.sendCommand(2, object: NSDictionary(dictionary: ["talk-begin": try! items[selectedIndexPath.row].toJSON().serialize() ?? "missing talk id"]))
+
+                        let items = self.items
+                        if let item = try? items[selectedIndexPath.row].toJSON().serialize() {
+                            let command = NSDictionary(dictionary: ["talk-begin": item])
+                            connection.sendCommand(2, object: command)
+                        } else {
+                            let command = NSDictionary(dictionary: ["talk-begin": "missing talk ID"])
+                            connection.sendCommand(2, object: command)
+                        }
+
                     }
                 }
-                connection.sendCommand(3, object: ["talk-time": currentTime])
+                connection.sendCommand(3, object: NSDictionary(dictionary: ["talk-time": currentTime]))
             }
         }
     }
@@ -138,8 +147,8 @@ extension TalkListViewController: AsyncServerDelegate {
         switch command {
         case 1:
             if let tvc = presentedViewController as? TalkViewController {
-                var slideSize = UIApplication.shared().keyWindow!.bounds.size // FIXME
-                switch String(object["slide-size"] as! NSNumber) {
+                var slideSize = UIApplication.shared.keyWindow!.bounds.size // FIXME
+                switch "\(object["slide-size"] as! NSNumber)" {
                 case "1":
                     slideSize /= 4
                 case "2":
@@ -151,7 +160,7 @@ extension TalkListViewController: AsyncServerDelegate {
                 default:
                     slideSize = CGSize.zero
                 }
-                switch String(object["slide-position"] as! NSNumber) {
+                switch "\(object["slide-position"] as! NSNumber)" {
                 case "0":
                     tvc.slideOverlayView?.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: slideSize)
                 case "1":

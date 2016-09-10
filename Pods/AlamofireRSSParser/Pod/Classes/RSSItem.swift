@@ -52,9 +52,9 @@ public class RSSItem: CustomStringConvertible {
         var images: [String] = Array();
         
         do {
-            let regex = try RegularExpression(pattern: "(https?)\\S*(png|jpg|jpeg|gif)", options: [RegularExpression.Options.caseInsensitive])
+            let regex = try NSRegularExpression(pattern: "(https?)\\S*(png|jpg|jpeg|gif)", options: [NSRegularExpression.Options.caseInsensitive])
         
-            regex.enumerateMatches(in: htmlString, options: [RegularExpression.MatchingOptions.reportProgress], range: NSMakeRange(0, htmlString.characters.count)) { (result, flags, stop) -> Void in
+            regex.enumerateMatches(in: htmlString, options: [NSRegularExpression.MatchingOptions.reportProgress], range: NSMakeRange(0, htmlString.characters.count)) { (result, flags, stop) -> Void in
                 if let range = result?.range {
                     images.append(htmlNSString.substring(with: range))  //because Swift ranges are still completely ridiculous
                 }

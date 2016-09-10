@@ -30,46 +30,46 @@ struct Talk {
 
 extension FeedItem: JSONDecodable, JSONEncodable {
     init(json value: JSON) throws {
-        title = try value.string("title")
-        description = try value.string("description")
-        date = DateFormatter().date(from: try value.string("date"))!
-        url = NSURL(string: try value.string("url"))! as URL
-        talk = try Talk(json: value.array("talk").first ?? .null)
+        title = try value.getString(at: "title")
+        description = try value.getString(at: "description")
+        date = DateFormatter().date(from: try value.getString(at: "date"))!
+        url = NSURL(string: try value.getString(at: "url"))! as URL
+        talk = try Talk(json: value.getArray(at: "talk").first ?? .null)
     }
     
     func toJSON() -> JSON {
-        return .Dictionary([
-            "title": .String(title),
-            "description": .String(description),
-            "date": .String(DateFormatter().string(from: date)),
-            "url": .String(url.absoluteString!),
-            "talk": .Array([talk?.toJSON() ?? .null])
+        return .dictionary([
+            "title": .string(title),
+            "description": .string(description),
+            "date": .string(DateFormatter().string(from: date)),
+            "url": .string(url.absoluteString),
+            "talk": .array([talk?.toJSON() ?? .null])
             ])
     }
 }
 
 extension Talk: JSONEncodable, JSONDecodable {
     init(json value: JSON) throws {
-        videoURL = try NSURL(string: value.string("videoURL"))! as URL
-        slidesURL = try NSURL(string: value.string("slidesURL"))! as URL
+        videoURL = try NSURL(string: value.getString(at: "videoURL"))! as URL
+        slidesURL = try NSURL(string: value.getString(at: "slidesURL"))! as URL
         slideTimes = [:]
     }
     
     func toJSON() -> JSON {
-        return .Dictionary([
-            "videoURL": .String(videoURL.absoluteString!),
-            "slidesURL": .String(slidesURL.absoluteString!)
+        return .dictionary([
+            "videoURL": .string(videoURL.absoluteString),
+            "slidesURL": .string(slidesURL.absoluteString)
             ])
     }
 }
 
 // MARK: Feed fetching
 
-func realmFeedItems(_ completion: (([FeedItem]) -> ())) {
+func realmFeedItems(_ completion: @escaping (([FeedItem]) -> ())) {
     let url = "https://realm.io/feed.xml"
     
-    _ = Alamofire.request(.GET, url).responseRSS() { response in
-        if let feed: RSSFeed = response.result.value {
+    _ = Alamofire.request(url).responseRSS() { response in
+        if let feed = response.value {
             var feedItems: [FeedItem] = []
             for item in feed.items {
                 feedItems.append(FeedItem(title: item.title!, description: item.itemDescription!, date: item.pubDate!, url: NSURL(string: item.guid!)! as URL, talk: nil))
@@ -83,8 +83,8 @@ func realmFeedItems(_ completion: (([FeedItem]) -> ())) {
 
 struct RealmTalkMetadata: JSONDecodable {
     init(json: JSON) throws {
-        title = try json.string("title")
-        chapters = try json.arrayOf("chapters")
+        title = try json.getString(at: "title")
+        chapters = try json.getArray(at: "chapters").map(RealmTalkMetadataChapter.init)
     }
     
     let title: String
@@ -93,10 +93,10 @@ struct RealmTalkMetadata: JSONDecodable {
 
 struct RealmTalkMetadataChapter: JSONDecodable {
     init(json: JSON) throws {
-        title = try json.string("title")
-        duration = try json.int("duration")
+        title = try json.getString(at: "title")
+        duration = try json.getInt(at: "duration")
         video = try RealmTalkMetadataChapterVideo(json: json["video"] ?? .null)
-        slides = try json.arrayOf("slides")
+        slides = try json.getArray(at: "slides").map(RealmTalkMetadataChapterSlide.init)
     }
     
     let title: String
@@ -107,7 +107,7 @@ struct RealmTalkMetadataChapter: JSONDecodable {
 
 struct RealmTalkMetadataChapterVideo {
     init(json: JSON) throws {
-        url = try json.string("url")
+        url = try json.getString(at: "url")
     }
     
     let url: String
@@ -115,8 +115,8 @@ struct RealmTalkMetadataChapterVideo {
 
 struct RealmTalkMetadataChapterSlide: JSONDecodable {
     init(json: JSON) throws {
-        url = try json.string("url")
-        time = try json.int("time")
+        url = try json.getString(at:"url")
+        time = try json.getInt(at: "time")
     }
     
     let url: String
@@ -130,18 +130,20 @@ extension FeedItem {
         if let scriptNodes = jiDoc?.xPath("//script") {
             for node in scriptNodes {
                 if let nodeContent = node.content,
-                    _ = nodeContent.range(of: "setupVideo") {
-                    let videoIDRegularExpression = try! RegularExpression(pattern: "setupVideo\\(\".*\", \"(.*)\"\\);", options: [])
+                    let _ = nodeContent.range(of: "setupVideo") {
+                    let videoIDRegularExpression = try! NSRegularExpression(pattern: "setupVideo\\(\".*\", \"(.*)\"\\);", options: [])
                     let matches = videoIDRegularExpression.matches(in: nodeContent, options: [], range: NSMakeRange(0, nodeContent.characters.count))
-                    guard let idMatchRange = matches.first?.range(at: 1) else { return }
+                    guard let idMatchRange = matches.first?.rangeAt(1) else { return }
                     let matchStartIndex = nodeContent.index(nodeContent.startIndex, offsetBy: idMatchRange.location)
                     let matchEndIndex = nodeContent.index(nodeContent.startIndex, offsetBy: NSMaxRange(idMatchRange))
                     let videoID = nodeContent.substring(with: matchStartIndex..<matchEndIndex)
-                    guard let videoManifestURL = NSURL(string: "https://realm.io/assets/videos/\(videoID).json") else { return }
-                    
+                    // Looks like video manifests are now fetched from contentful
+//                    guard let videoManifestURL = NSURL(string: "https://realm.io/assets/videos/\(videoID).json") else { return }
+                    guard let videoManifestURL = NSURL(string: "https:\(videoID)") else { return }
+
                     if let jsonData = try? Data(contentsOf: videoManifestURL as URL, options: []),
                         let metadata = try? RealmTalkMetadata(json: JSON(data: jsonData as Data)),
-                        firstChapter = metadata.chapters.first {
+                        let firstChapter = metadata.chapters.first {
                         
                         var slidesURL = ""
                         var timings: [TimeInterval:Int] = [:]
@@ -166,24 +168,26 @@ extension FeedItem {
         }
     }
     
-    func materializeVideoURL(_ videoURL: URL, completion: ((URL?) -> ())) {
+    func materializeVideoURL(_ videoURL: URL, completion: @escaping ((URL?) -> ())) {
         switch videoURL.host {
         case .some("realm.wistia.com"):
             var request = URLRequest(url: URL(string: "https://fast.wistia.net/embed/iframe/\(videoURL.lastPathComponent ?? "")")!)
             request.addValue("\(videoURL)", forHTTPHeaderField: "Referer")
-            Alamofire.request(request).response { (request,response,responseData,error) in
-                let responseString = String(data: responseData!, encoding: String.Encoding.utf8)!
+            Alamofire.request(request).response { defaultDataResponse in
+                let responseString = String(data: defaultDataResponse.data!, encoding: String.Encoding.utf8)!
                 let jiDoc = Ji(htmlString: responseString)
+                guard let scriptNodeCount = jiDoc?.xPath("//script")?.count, scriptNodeCount >= 3 else { return }
                 if let scriptContent = jiDoc?.xPath("//script")?[2].content {
-                let iFrameInitRegex = try! RegularExpression(pattern: "Wistia\\.iframeInit\\((\\{.*\\}\\}), \\{\\}\\);$", options: [.anchorsMatchLines])
+                let iFrameInitRegex = try! NSRegularExpression(pattern: "Wistia\\.iframeInit\\((\\{.*\\}\\}), \\{\\}\\);$", options: [.anchorsMatchLines])
                 let matches = iFrameInitRegex.matches(in: scriptContent, options: [], range: NSMakeRange(0, scriptContent.characters.count))
                 if let firstMatch = matches.first {
-                    let matchStartIndex = scriptContent.index(scriptContent.startIndex, offsetBy: firstMatch.range(at: 1).location)
-                    let matchEndIndex = scriptContent.index(scriptContent.startIndex, offsetBy: NSMaxRange(firstMatch.range(at: 1)))
+                    let matchStartIndex = scriptContent.index(scriptContent.startIndex, offsetBy: firstMatch.rangeAt(1).location)
+                    let matchEndIndex = scriptContent.index(scriptContent.startIndex, offsetBy: NSMaxRange(firstMatch.rangeAt(1)))
                     let iframeInitJSON = scriptContent.substring(with: matchStartIndex..<matchEndIndex).data(using: String.Encoding.utf8)
                     let json = try? JSONSerialization.jsonObject(with: iframeInitJSON!, options: [])
                     // display_name: "1080p"
-                    if let assets = json?["assets"] as? Array<AnyObject> {
+                    if let json = json as? NSDictionary,
+                        let assets = json["assets"] as? Array<AnyObject> {
                         let a1080pAssets = assets.filter { asset in
                             if let displayName = asset["display_name"] as? String {
                                 return displayName == "1080p"
@@ -192,7 +196,7 @@ extension FeedItem {
                             }
                         }
                         if let firstAsset = a1080pAssets.first,
-                               urlString = firstAsset["url"] as? String {
+                               let urlString = firstAsset["url"] as? String {
                             completion(URL(string: urlString))
                         }
                     }  else {
@@ -214,7 +218,7 @@ extension FeedItem {
 extension Talk {
     var presentationID: String? {
         get {
-            return slidesURL.path?.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+            return slidesURL.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         }
     }
     
@@ -224,8 +228,8 @@ extension Talk {
             var image: UIImage?
             group.enter()
             let slideURLString = "https://speakerd.s3.amazonaws.com/presentations/\(presentationID ?? "")/slide_\(slide).jpg"
-            Alamofire.request(.GET, slideURLString).responseData(completionHandler: { (response) in
-                if let data = response.data, i = UIImage(data: data) {
+            Alamofire.request(slideURLString).responseData(completionHandler: { (response) in
+                if let data = response.data, let i = UIImage(data: data) {
                     image = i
                 }
                 group.leave()

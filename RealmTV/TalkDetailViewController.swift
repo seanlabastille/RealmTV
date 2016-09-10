@@ -17,7 +17,7 @@ class TalkDetailViewController: UIViewController {
         didSet {
             title = feedItem?.title
             talkDescriptionLabel.text = feedItem?.description
-            DispatchQueue.global(attributes: [DispatchQueue.GlobalAttributes.qosUserInitiated]).async {
+            DispatchQueue.global(qos: .userInitiated).async {
                 if let slide = self.feedItem?.talk?[slide: 0] {
                     DispatchQueue.main.async {
                         self.talksPosterImageView.image = slide

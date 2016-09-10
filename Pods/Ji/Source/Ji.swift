@@ -59,12 +59,14 @@ public class Ji {
 	- returns: The initialized Ji document object or nil if the object could not be initialized.
 	*/
 	public required init?(data: Data?, encoding: String.Encoding, isXML: Bool) {
-		if let data = data where data.count > 0 {
+		if let data = data , data.count > 0 {
 			self.isXML = isXML
 			self.data = data
 			self.encoding = encoding
-			
-			let cBuffer = UnsafePointer<CChar>((data as NSData).bytes)
+
+            let cBuffer = data.withUnsafeBytes({ (bytes) -> UnsafePointer<CChar> in
+                return bytes
+            })
 			let cSize = CInt(data.count)
 			let cfEncoding = CFStringConvertNSStringEncodingToEncoding(encoding.rawValue)
 			let cfEncodingAsString: CFString = CFStringConvertEncodingToIANACharSetName(cfEncoding)

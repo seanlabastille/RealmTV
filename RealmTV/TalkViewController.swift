@@ -24,7 +24,7 @@ class TalkViewController : AVPlayerViewController {
             self.talk = talk
             player = AVPlayer(playerItem: AVPlayerItem(asset: AVAsset(url: talk.videoURL)))
             // Fetch first slide
-            DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosUserInitiated).async {
+            DispatchQueue.global(qos: .userInitiated).async {
                 if let slide = talk[slide: 0] {
                     self.slideOverlayView = UIImageView(image: slide)
                     DispatchQueue.main.async {
@@ -43,16 +43,17 @@ class TalkViewController : AVPlayerViewController {
                 }
             }
             // Keep an eye on current play time and fetch relevant slides
-            slidesTimer = DispatchSource.timer(flags: [], queue: DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosUserInitiated))
+
+            slidesTimer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global(qos: .userInitiated))
             if let timer = slidesTimer {
                 timer.setEventHandler {
-                    if self.player?.rate > 0 {
+                    if let rate = self.player?.rate, rate > 0 {
                         let second = TimeInterval((self.player?.currentTime().value)!/1_000_000_000)
                         self.talkDelegate?.talkCurrentTimeChanged(self, currentTime: second)
                         if let slideNumber = self.talk?.slideTimes[second+1] { // Look ahead a second to have the slide fetched in time
                             dump("\(second)s \(slideNumber-1)")
                             // Prefetch next 10 slides
-                            DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosUtility).async {
+                            DispatchQueue.global(qos: .utility).async {
                                 (max(0,slideNumber-1)..<(slideNumber+10)).forEach { _ = talk[slide: $0] }
                             }
                             if let slide = talk[slide: max(0,slideNumber-1)] {

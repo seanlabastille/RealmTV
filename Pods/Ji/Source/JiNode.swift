@@ -364,7 +364,7 @@ public class JiNode {
 	public func firstChildWithAttributeName(_ attributeName: String, attributeValue: String) -> JiNode? {
 		var node = firstChild
 		while (node != nil) {
-			if let value = node![attributeName] where value == attributeValue {
+			if let value = node![attributeName], value == attributeValue {
 				return node
 			}
 			node = node?.nextSibling

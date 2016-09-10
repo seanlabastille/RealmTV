@@ -1,9 +1,7 @@
 //
-//  JiHelper.swift
-//  Ji
+//  DispatchQueue+Alamofire.swift
 //
-//  Created by Honghao Zhang on 2015-07-21.
-//  Copyright (c) 2015 Honghao Zhang (张宏昊)
+//  Copyright (c) 2014-2016 Alamofire Software Foundation (http://alamofire.org/)
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +18,25 @@
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE.
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
 
-import Foundation
+import Dispatch
 
-extension String {
-	/**
-	Creates a new String from a xmlChar CString, using UTF-8 encoding.
-	
-	- parameter char: xmlChar CString
-	
-	- returns: Returns nil if the CString is NULL or if it contains ill-formed UTF-8 code unit sequences.
-	*/
-	static func fromXmlChar(_ char: UnsafePointer<xmlChar>?) -> String? {
-		if char != nil {
-            return char?.withMemoryRebound(to: CChar.self, capacity: 1, { (char) -> String in
-                return String(cString: char)
-            })
-		} else {
-			return nil
-		}
-	}
+extension DispatchQueue {
+    static var userInteractive: DispatchQueue { return DispatchQueue.global(qos: .userInteractive) }
+    static var userInitiated: DispatchQueue { return DispatchQueue.global(qos: .userInitiated) }
+    static var utility: DispatchQueue { return DispatchQueue.global(qos: .utility) }
+    static var background: DispatchQueue { return DispatchQueue.global(qos: .background) }
+
+    func after(_ delay: TimeInterval, execute closure: @escaping () -> Void) {
+        asyncAfter(deadline: .now() + delay, execute: closure)
+    }
+
+    func syncResult<T>(_ closure: () -> T) -> T {
+        var result: T!
+        sync { result = closure() }
+        return result
+    }
 }

@@ -71,19 +71,17 @@ private let ParserMaximumDepth = 512
 /// input and it does not allow trailing commas in arrays or dictionaries.
 public struct JSONParser {
 
-    private enum Sign: Int {
+    fileprivate enum Sign: Int {
         case positive = 1
         case negative = -1
     }
 
     private let input: UnsafeBufferPointer<UInt8>
-    private let owner: Any?
     private var loc = 0
     private var depth = 0
 
-    private init<T>(buffer: UnsafeBufferPointer<UInt8>, owner: T) {
-        self.input = buffer
-        self.owner = owner
+    fileprivate init(input: UnsafeBufferPointer<UInt8>) {
+        self.input = input
     }
 
     /// Decode the root element of the `JSON` stream. This may be any fragment
@@ -155,7 +153,7 @@ public struct JSONParser {
                     break advancing
                 }
             } catch let InternalError.numberOverflow(offset: start) {
-                return try decodeNumberAsString(start)
+                return try decodeNumberAsString(from: start)
             }
         }
         
@@ -167,7 +165,6 @@ public struct JSONParser {
             switch input[loc] {
             case Literal.SPACE, Literal.TAB, Literal.RETURN, Literal.NEWLINE:
                 loc = (loc + 1)
-
             default:
                 return
             }
@@ -210,7 +207,7 @@ public struct JSONParser {
         }
 
         loc += 4
-        return .Bool(true)
+        return .bool(true)
     }
 
     private mutating func decodeFalse() throws -> JSON {
@@ -226,7 +223,7 @@ public struct JSONParser {
         }
 
         loc += 5
-        return .Bool(false)
+        return .bool(false)
     }
 
     private var stringDecodingBuffer = [UInt8]()
@@ -248,7 +245,7 @@ public struct JSONParser {
                 case Literal.n:            stringDecodingBuffer.append(Literal.NEWLINE)
                 case Literal.u:
                     loc = (loc + 1)
-                    try readUnicodeEscape(loc - 2)
+                    try readUnicodeEscape(start: loc - 2)
 
                     // readUnicodeEscape() advances loc on its own, so we'll `continue` now
                     // to skip the typical "advance past this character" for all the other escapes
@@ -267,7 +264,7 @@ public struct JSONParser {
                     String(cString: UnsafePointer($0.baseAddress!))
                 }
                 
-                return .String(string)
+                return .string(string)
 
             case let other:
                 stringDecodingBuffer.append(other)
@@ -305,7 +302,7 @@ public struct JSONParser {
         return codeUnit
     }
 
-    private mutating func readUnicodeEscape(_ start: Int) throws {
+    private mutating func readUnicodeEscape(start: Int) throws {
         guard let codeUnit = readCodeUnit() else {
             throw Error.unicodeEscapeInvalid(offset: start)
         }
@@ -322,7 +319,7 @@ public struct JSONParser {
             loc += 2
 
             // Ensure the second code unit is valid for the surrogate pair
-            guard let secondCodeUnit = readCodeUnit() where UTF16.isTrailSurrogate(secondCodeUnit) else {
+            guard let secondCodeUnit = readCodeUnit(), UTF16.isTrailSurrogate(secondCodeUnit) else {
                 throw Error.unicodeEscapeInvalid(offset: start)
             }
 
@@ -350,7 +347,7 @@ public struct JSONParser {
 
             if loc < input.count && input[loc] == Literal.RIGHT_BRACKET {
                 loc = (loc + 1)
-                return .Array(items)
+                return .array(items)
             }
 
             if !items.isEmpty {
@@ -407,7 +404,7 @@ public struct JSONParser {
                     obj[k] = v
                 }
                 decodeObjectBuffers.putBuffer(pairs)
-                return .Dictionary(obj)
+                return .dictionary(obj)
             }
 
             if !pairs.isEmpty {
@@ -423,7 +420,7 @@ public struct JSONParser {
                 throw Error.dictionaryMissingKey(offset: start)
             }
 
-            let key = try decodeString().string()
+            let key = try decodeString().getString()
             skipWhitespace()
 
             guard loc < input.count && input[loc] == Literal.COLON else {
@@ -467,7 +464,7 @@ public struct JSONParser {
                 }
 
             case .decimal, .exponent:
-                return try detectingFloatingPointErrors(parser.start) {
+                return try detectingFloatingPointErrors(start: parser.start) {
                     try decodeFloatingPointValue(parser, sign: sign, value: Double(value))
                 }
 
@@ -484,7 +481,7 @@ public struct JSONParser {
         }
 
         loc = parser.loc
-        return .Int(signedValue)
+        return .int(signedValue)
     }
 
     private mutating func decodeFloatingPointValue(_ parser: NumberParser, sign: Sign, value: Double) throws -> JSON {
@@ -527,20 +524,21 @@ public struct JSONParser {
         }
 
         loc = parser.loc
-        return .Double(Double(sign.rawValue) * value * pow(10, Double(exponentSign.rawValue) * exponent))
+        return .double(Double(sign.rawValue) * value * pow(10, Double(exponentSign.rawValue) * exponent))
     }
 
-    private mutating func decodeNumberAsString(_ start: Int) throws -> JSON {
+
+    private mutating func decodeNumberAsString(from position: Int) throws -> JSON {
         var parser: NumberParser = {
             let state: NumberParser.State
-            switch input[start] {
+            switch input[position] {
             case Literal.MINUS: state = .leadingMinus
             case Literal.zero: state = .leadingZero
             case Literal.one...Literal.nine: state = .preDecimalDigits
             default:
                 fatalError("Internal error: decodeNumber called on not-a-number")
             }
-            return NumberParser(loc: start, input: input, state: state)
+            return NumberParser(loc: position, input: input, state: state)
         }()
 
         stringDecodingBuffer.removeAll(keepingCapacity: true)
@@ -583,12 +581,12 @@ public struct JSONParser {
                 }
 
                 loc = parser.loc
-                return .String(string)
+                return .string(string)
             }
         }
     }
 
-    private func detectingFloatingPointErrors<T>(_ loc: Int, _ f: @noescape() throws -> T) throws -> T {
+    private func detectingFloatingPointErrors<T>(start loc: Int, _ f: () throws -> T) throws -> T {
         let flags = FE_UNDERFLOW | FE_OVERFLOW
         feclearexcept(flags)
         let value = try f()
@@ -662,7 +660,7 @@ private struct NumberParser {
         state = .decimal
     }
 
-    mutating func parsePreDecimalDigits(f: @noescape(UInt8) throws -> Void) rethrows {
+    mutating func parsePreDecimalDigits(f: (UInt8) throws -> Void) rethrows {
         assert(state == .preDecimalDigits, "Unexpected state entering parsePreDecimalDigits")
         advancing: while loc < input.count {
             let c = input[loc]
@@ -703,7 +701,7 @@ private struct NumberParser {
         }
     }
 
-    mutating func parsePostDecimalDigits(f: @noescape(UInt8) throws -> Void) rethrows {
+    mutating func parsePostDecimalDigits(f: (UInt8) throws -> Void) rethrows {
         assert(state == .postDecimalDigits, "Unexpected state entering parsePostDecimalDigits")
 
         advancing: while loc < input.count {
@@ -767,7 +765,7 @@ private struct NumberParser {
         }
     }
 
-    mutating func parseExponentDigits(f: @noescape(UInt8) throws -> Void) rethrows {
+    mutating func parseExponentDigits(f: (UInt8) throws -> Void) rethrows {
         assert(state == .exponentDigits, "Unexpected state entering parseExponentDigits")
         advancing: while loc < input.count {
             let c = input[loc]
@@ -787,39 +785,54 @@ private struct NumberParser {
 
 public extension JSONParser {
 
-    /// Creates a `JSONParser` ready to parse UTF-8 encoded `NSData`.
+    /// Creates a `JSONParser` ready to parse UTF-8 encoded `Data`.
     ///
     /// If the data is mutable, it is copied before parsing. The data's lifetime
     /// is extended for the duration of parsing.
+    @available(*, unavailable, message: "Replaced with parse(utf8:)")
     init(utf8Data inData: Data) {
-        let data = (inData as NSData).copy() as! Data
-        let buffer = UnsafeBufferPointer(start: UnsafePointer<UInt8>((data as NSData).bytes), count: data.count)
-        self.init(buffer: buffer, owner: data)
+        fatalError("unavailable code cannot be executed")
     }
 
     /// Creates a `JSONParser` from the code units represented by the `string`.
     ///
     /// The synthesized string is lifetime-extended for the duration of parsing.
+    @available(*, unavailable, message: "Replaced with parse(utf8:)")
     init(string: String) {
-        let codePoints = string.nulTerminatedUTF8
-        let buffer = codePoints.withUnsafeBufferPointer { nulTerminatedBuffer in
-            // don't want to include the nul termination in the buffer - trim it off
-            UnsafeBufferPointer(start: nulTerminatedBuffer.baseAddress, count: nulTerminatedBuffer.count - 1)
+        fatalError("unavailable code cannot be executed")
+    }
+
+    /// Creates an instance of `JSON` from UTF-8 encoded `data`.
+    static func parse(utf8 data: Data) throws -> JSON {
+        return try data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> JSON in
+            let buffer = UnsafeBufferPointer(start: ptr, count: data.count)
+            var parser = JSONParser(input: buffer)
+            return try parser.parse()
         }
-        self.init(buffer: buffer, owner: codePoints)
+    }
+
+    /// Creates an instance of `JSON` from `string`.
+    static func parse(_ string: String) throws -> JSON {
+        return try string.utf8CString.withUnsafeBufferPointer { (nulTerminatedBuffer) throws -> JSON in
+            return try nulTerminatedBuffer.baseAddress!.withMemoryRebound(to: UInt8.self, capacity: nulTerminatedBuffer.count) { (utf8Base) throws -> JSON in
+                // don't want to include the nul termination in the buffer - trim it off
+                let buffer = UnsafeBufferPointer(start: utf8Base, count: nulTerminatedBuffer.count - 1)
+                var parser = JSONParser(input: buffer)
+                return try parser.parse()
+            }
+        }
     }
 
 }
 
 extension JSONParser: JSONParserType {
 
-    /// Creates an instance of `JSON` from UTF-8 encoded `NSData`.
-    /// - parameter data: An instance of `NSData` to parse `JSON` from.
+    /// Creates an instance of `JSON` from UTF-8 encoded `Data`.
+    /// - parameter data: An instance of `Data` to parse `JSON` from.
     /// - throws: Any `JSONParser.Error` that arises during decoding.
     /// - seealso: JSONParser.parse()
     public static func createJSONFromData(_ data: Data) throws -> JSON {
-        var parser = JSONParser(utf8Data: data)
-        return try parser.parse()
+        return try parse(utf8: data)
     }
 
 }
@@ -832,7 +845,7 @@ extension JSONParser {
     /// document. Most errors include an associated `offset`, representing the
     /// offset into the UTF-8 characters making up the document where the error
     /// occurred.
-    public enum Error: ErrorProtocol {
+    public enum Error: Swift.Error {
         /// The parser ran out of data prematurely. This usually means a value
         /// was not escaped, such as a string literal not ending with a double
         /// quote.
@@ -887,7 +900,7 @@ extension JSONParser {
         case invalidUnicodeStreamEncoding(detectedEncoding: JSONEncodingDetector.Encoding)
     }
 
-    private enum InternalError: ErrorProtocol {
+    fileprivate enum InternalError: Swift.Error {
         /// Attempted to parse an integer outside the range of [Int.min, Int.max]
         /// or a double outside the range of representable doubles. Note that
         /// for doubles, this could be an overflow or an underflow - we don't

@@ -23,7 +23,7 @@
  */
 
 #import <Foundation/Foundation.h>
-@import  CocoaAsyncSocket;
+#import <CocoaAsyncSocket/GCDAsyncSocket.h>
 #import "AsyncNetworkHelpers.h"
 
 @class  AsyncConnection;

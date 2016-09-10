@@ -21,7 +21,7 @@ class ViewController: UIViewController, AsyncClientDelegate {
     var playbackControlsNavigationController: UIViewController?
     
     var webView: WKWebView = {
-        let source = try! String(contentsOfFile: Bundle.main.pathForResource("transcriptWrangler", ofType: "js")!)
+        let source = try! String(contentsOfFile: Bundle.main.path(forResource: "transcriptWrangler", ofType: "js")!)
         let userScript = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         
         let userContentController = WKUserContentController()
@@ -67,8 +67,8 @@ class ViewController: UIViewController, AsyncClientDelegate {
     func client(_ theClient: AsyncClient!, didReceiveCommand command: AsyncCommand, object: AnyObject!, connection: AsyncConnection!) {
         print("\(theClient) \(command) \(object) \(connection)")
         if let object = object as? [String: AnyObject],
-           talkData = object["talk-begin"] as? Data,
-            item = try? FeedItem(json: JSON(data: talkData)) {
+           let talkData = object["talk-begin"] as? Data,
+            let item = try? FeedItem(json: JSON(data: talkData)) {
             if item.url != webView.url {
                 navigationItem.prompt = nil
                 title = item.title
@@ -77,7 +77,7 @@ class ViewController: UIViewController, AsyncClientDelegate {
         }
         
         if let object = object as? [String: AnyObject],
-            talkCurrentTime = object["talk-time"] as? TimeInterval {
+            let talkCurrentTime = object["talk-time"] as? TimeInterval {
             if transcriptShouldFollow { self.webView.evaluateJavaScript("scrollToTranscriptHeaderForTime(\(talkCurrentTime))", completionHandler: nil)
             }
             navigationItem.prompt = "\(talkCurrentTime)"
@@ -110,14 +110,15 @@ class ViewController: UIViewController, AsyncClientDelegate {
 
 class PartialPresentationSegue: UIStoryboardSegue {
     override func perform() {
-        sourceViewController.present(destinationViewController, animated: true, completion: nil)
+        source.present(destination, animated: true, completion: nil)
     }
 }
 
 private class PartialPresentationController: UIPresentationController {
-    private override func frameOfPresentedViewInContainerView() -> CGRect {
+    private override var frameOfPresentedViewInContainerView: CGRect { get {
         let height = CGFloat(300.0)
         return CGRect(x: 0, y: presentingViewController.view.frame.height-height, width: presentingViewController.view.frame.width, height: height)
+        }
     }
 }
 
@@ -129,7 +130,7 @@ extension ViewController: UIViewControllerTransitioningDelegate {
 
 extension ViewController: PlaybackControlsViewControllerDelegate {
     func updateSlide(attributes: [String: Int]) {
-         client?.sendCommand(1, object: attributes)
+        client?.sendCommand(1, object: NSDictionary(dictionary: attributes))
     }
     
     func toggleTranscript(followsVideoProgress: Bool) {
@@ -137,7 +138,7 @@ extension ViewController: PlaybackControlsViewControllerDelegate {
     }
     
     func adjustPlayback(speed: Float) {
-        client?.sendCommand(2, object: ["playback-speed": speed])
+        client?.sendCommand(2, object: NSDictionary(dictionary: ["playback-speed": speed]))
     }
 }
 
