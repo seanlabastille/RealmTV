@@ -18,6 +18,10 @@ struct FeedItem {
     let date: Date
     let url: URL
     var talk: Talk?
+
+    static func <(lhs: FeedItem, rhs: FeedItem) -> Bool {
+        return lhs.date.compare(rhs.date) != .orderedAscending
+    }
 }
 
 struct Talk {

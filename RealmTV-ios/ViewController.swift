@@ -10,11 +10,12 @@
 import UIKit
 import WebKit
 import Alamofire
-import AsyncNetwork
+import MultipeerConnectivity
 import Freddy
 
-class ViewController: UIViewController, AsyncClientDelegate {
-    var client: AsyncClient?
+class ViewController: UIViewController {
+    var client: MCNearbyServiceBrowser?
+    var session: MCSession?
     var timer: DispatchSource?
     var seconds = 0
     var transcriptShouldFollow = true
@@ -47,43 +48,27 @@ class ViewController: UIViewController, AsyncClientDelegate {
         webView.loadHTMLString("<h1 style='font: -apple-system-headline; font-size: 32pt;'>Talk transcript will be shown here</h1>", baseURL: nil)
         navigationItem.prompt = "Choose a talk on your TV to get started"
     }
-    
-    func client(_ theClient: AsyncClient!, didFind service: NetService!, moreComing: Bool) -> Bool {
-        print("\(theClient) \(service) \(moreComing)")
-        return true
-    }
-    
-    func client(_ theClient: AsyncClient!, didConnect connection: AsyncConnection!) {
-        print("\(theClient) \(connection)")
-    }
-    
-    func client(_ theClient: AsyncClient!, didDisconnect connection: AsyncConnection!) {
-        print("\(#function) \(theClient) \(connection)")
-        client = AsyncClient()
-        client?.delegate = self
-        client?.start()
-    }
-    
-    func client(_ theClient: AsyncClient!, didReceiveCommand command: AsyncCommand, object: AnyObject!, connection: AsyncConnection!) {
-        print("\(theClient) \(command) \(object) \(connection)")
-        if let object = object as? [String: AnyObject],
-           let talkData = object["talk-begin"] as? Data,
-            let item = try? FeedItem(json: JSON(data: talkData)) {
-            if item.url != webView.url {
-                navigationItem.prompt = nil
-                title = item.title
-                webView.load(URLRequest(url: item.url))
+
+    func handleJSON(json data: Data) {
+        if let freddyJSON = try? JSON(data: data), let feedItemJSON = freddyJSON["talk-begin"], let feedItem = try? FeedItem(json: feedItemJSON) {
+            DispatchQueue.main.async {
+                if feedItem.url != self.webView.url {
+                    self.navigationItem.prompt = nil
+                    self.title = feedItem.title
+                    self.webView.load(URLRequest(url: feedItem.url))
+                }
+            }
+
+        }
+        if let freddyJSON = try? JSON(data: data), let talkCurrentTime = try? freddyJSON.getInt(at: "talk-time") {
+            DispatchQueue.main.async {
+                if self.transcriptShouldFollow { self.webView.evaluateJavaScript("scrollToTranscriptHeaderForTime(\(talkCurrentTime))", completionHandler: nil)
+                }
+                self.navigationItem.prompt = "\(talkCurrentTime)"
             }
         }
-        
-        if let object = object as? [String: AnyObject],
-            let talkCurrentTime = object["talk-time"] as? TimeInterval {
-            if transcriptShouldFollow { self.webView.evaluateJavaScript("scrollToTranscriptHeaderForTime(\(talkCurrentTime))", completionHandler: nil)
-            }
-            navigationItem.prompt = "\(talkCurrentTime)"
-        }
     }
-    
+
     @IBAction func presentPlaybackControls(_ sender: AnyObject) {
         playbackControlsNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "playbackControls")
         guard let playbackControlsNavigationController = playbackControlsNavigationController else { return }
@@ -101,10 +86,15 @@ class ViewController: UIViewController, AsyncClientDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
-        client = AsyncClient()
+
+        let peerID = MCPeerID(displayName: UIDevice.current.name)
+        session = MCSession(peer: peerID)
+        session?.delegate = self
+
+        client = MCNearbyServiceBrowser(peer: peerID, serviceType: "realm-tv")
         client?.delegate = self
-        client?.start()
+        client?.startBrowsingForPeers()
+
     }
 }
 
@@ -130,7 +120,13 @@ extension ViewController: UIViewControllerTransitioningDelegate {
 
 extension ViewController: PlaybackControlsViewControllerDelegate {
     func updateSlide(attributes: [String: Int]) {
-        client?.sendCommand(1, object: NSDictionary(dictionary: attributes))
+        var attributesJSON = [String: JSON]()
+        for (key, value) in attributes {
+            attributesJSON[key] = .int(value)
+        }
+        if let peers = session?.connectedPeers, let data = try? JSON.dictionary(attributesJSON).serialize() {
+            try? session?.send(data, toPeers: peers, with: .reliable)
+        }
     }
     
     func toggleTranscript(followsVideoProgress: Bool) {
@@ -138,7 +134,44 @@ extension ViewController: PlaybackControlsViewControllerDelegate {
     }
     
     func adjustPlayback(speed: Float) {
-        client?.sendCommand(2, object: NSDictionary(dictionary: ["playback-speed": speed]))
+        if let peers = session?.connectedPeers, let data = try? JSON.dictionary(["playback-speed": .double(Double(speed))]).serialize() {
+            try? session?.send(data, toPeers: peers, with: .reliable)
+        }
     }
 }
 
+extension ViewController: MCNearbyServiceBrowserDelegate {
+    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+        dump("\(#function) \(browser) \(peerID)")
+    }
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        dump("\(#function) \(browser) \(peerID) \(info)")
+        guard let session = self.session else { return }
+        browser.invitePeer(peerID, to: session, withContext: nil, timeout: 0)
+    }
+}
+
+extension ViewController: MCSessionDelegate {
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+        dump("\(#function) \(session) \(peerID) \(streamName) \(stream)")
+    }
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
+        dump("\(#function) \(session) \(resourceName) \(peerID) \(progress)")
+    }
+
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
+        dump("\(#function) \(session) \(resourceName) \(peerID) \(localURL) \(error)")
+    }
+
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        dump("\(#function) \(session) \(peerID) \(data)")
+        if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
+            dump(json)
+            handleJSON(json: data)
+        }
+    }
+
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        dump("\(#function) \(session) \(peerID) \(state)")
+    }
+}
