@@ -6,36 +6,35 @@ import Foundation
 
 extension JSON {
 
-    /// Attempt to serialize `JSON` into an `NSData`.
+    /// Attempt to serialize `JSON` into an `Data`.
     /// - returns: A byte-stream containing the `JSON` ready for wire transfer.
     /// - throws: Errors that arise from `NSJSONSerialization`.
     /// - see: Foundation.NSJSONSerialization
-    public func serialize() throws -> NSData {
-        let obj: AnyObject = toNSJSONSerializationObject()
-        return try NSJSONSerialization.dataWithJSONObject(obj, options: [])
+    public func serialize() throws -> Data {
+        return try JSONSerialization.data(withJSONObject: toNSJSONSerializationValue(), options: [])
     }
 
     /// A function to help with the serialization of `JSON`.
-    /// - returns: An `AnyObject` suitable for `NSJSONSerialization`'s use.
-    private func toNSJSONSerializationObject() -> AnyObject {
+    /// - returns: An `Any` suitable for `NSJSONSerialization`'s use.
+    private func toNSJSONSerializationValue() -> Any {
         switch self {
-        case .Array(let jsonArray):
-            return jsonArray.map { $0.toNSJSONSerializationObject() }
-        case .Dictionary(let jsonDictionary):
-            var cocoaDictionary = Swift.Dictionary<Swift.String, AnyObject>(minimumCapacity: jsonDictionary.count)
+        case .array(let jsonArray):
+            return jsonArray.map { $0.toNSJSONSerializationValue() }
+        case .dictionary(let jsonDictionary):
+            var cocoaDictionary = Swift.Dictionary<Swift.String, Any>(minimumCapacity: jsonDictionary.count)
             for (key, json) in jsonDictionary {
-                cocoaDictionary[key] = json.toNSJSONSerializationObject()
+                cocoaDictionary[key] = json.toNSJSONSerializationValue()
             }
             return cocoaDictionary
-        case .String(let str):
+        case .string(let str):
             return str
-        case .Double(let num):
-            return num
-        case .Int(let int):
-            return int
-        case .Bool(let b):
-            return b
-        case .Null:
+        case .double(let num):
+            return NSNumber(value: num)
+        case .int(let int):
+            return NSNumber(value: int)
+        case .bool(let b):
+            return NSNumber(value: b)
+        case .null:
             return NSNull()
         }
 

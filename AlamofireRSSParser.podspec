@@ -19,5 +19,5 @@ s.resource_bundles = {
   'AlamofireRSS' => ['Pod/Assets/*.png']
 }
 
-s.dependency 'Alamofire', '~> 3.3.0'
+s.dependency 'Alamofire'
 end

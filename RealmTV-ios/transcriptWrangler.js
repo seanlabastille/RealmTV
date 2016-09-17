@@ -16,6 +16,9 @@ function transcriptHeaders() {
 }
 
 function scrollToTranscriptHeaderForTime(seconds) {
+    if (document.querySelector('#social_bar') != null) {
+        document.querySelector('#social_bar').remove();
+    }
     var th = transcriptHeaders()
     var timeCode = Math.floor(seconds / 60) * 100 + seconds % 60
     var paddedTimeCode3 = (timeCode < 10 ? "00" : (timeCode < 100 ? "0" : "")) + (""+timeCode)

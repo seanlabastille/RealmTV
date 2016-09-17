@@ -30,7 +30,7 @@ public class RSSItem: CustomStringConvertible {
     public var author: String? = nil
     public var comments: String? = nil
     public var source: String? = nil
-    public var pubDate: NSDate? = nil
+    public var pubDate: Date? = nil
     public var mediaThumbnail: String? = nil;
     public var mediaContent: String? = nil;
     public var imagesFromDescription: [String]? = nil;
@@ -47,16 +47,16 @@ public class RSSItem: CustomStringConvertible {
      
         - Returns: an array of image url Strings ([String])
      */
-    private func imagesFromHTMLString(htmlString: String) -> [String] {
+    private func imagesFromHTMLString(_ htmlString: String) -> [String] {
         let htmlNSString = htmlString as NSString;
         var images: [String] = Array();
         
         do {
-            let regex = try NSRegularExpression(pattern: "(https?)\\S*(png|jpg|jpeg|gif)", options: [NSRegularExpressionOptions.CaseInsensitive])
+            let regex = try NSRegularExpression(pattern: "(https?)\\S*(png|jpg|jpeg|gif)", options: [NSRegularExpression.Options.caseInsensitive])
         
-            regex.enumerateMatchesInString(htmlString, options: [NSMatchingOptions.ReportProgress], range: NSMakeRange(0, htmlString.characters.count)) { (result, flags, stop) -> Void in
+            regex.enumerateMatches(in: htmlString, options: [NSRegularExpression.MatchingOptions.reportProgress], range: NSMakeRange(0, htmlString.characters.count)) { (result, flags, stop) -> Void in
                 if let range = result?.range {
-                    images.append(htmlNSString.substringWithRange(range))  //because Swift ranges are still completely ridiculous
+                    images.append(htmlNSString.substring(with: range))  //because Swift ranges are still completely ridiculous
                 }
             }
         }

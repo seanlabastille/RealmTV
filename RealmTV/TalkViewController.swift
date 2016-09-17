@@ -9,12 +9,12 @@
 import AVKit
 
 protocol TalkViewControllerDelegate {
-    func talkCurrentTimeChanged(talkViewController: TalkViewController, currentTime: NSTimeInterval)
+    func talkCurrentTimeChanged(_ talkViewController: TalkViewController, currentTime: TimeInterval)
 }
 
 class TalkViewController : AVPlayerViewController {
     var slideOverlayView: UIImageView?
-    var slidesTimer: dispatch_source_t?
+    var slidesTimer: DispatchSourceTimer?
     var talk: Talk?
     var talkDelegate: TalkViewControllerDelegate?
     
@@ -22,12 +22,12 @@ class TalkViewController : AVPlayerViewController {
         super.init(nibName: nil, bundle: nil)
         if let talk = feedItem.talk {
             self.talk = talk
-            player = AVPlayer(playerItem: AVPlayerItem(asset: AVAsset(URL: talk.videoURL)))
+            player = AVPlayer(playerItem: AVPlayerItem(asset: AVAsset(url: talk.videoURL)))
             // Fetch first slide
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+            DispatchQueue.global(qos: .userInitiated).async {
                 if let slide = talk[slide: 0] {
                     self.slideOverlayView = UIImageView(image: slide)
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         guard let slideOverlayView = self.slideOverlayView else { return }
                         let bounds = self.view.bounds
                         var slideSize = bounds.size
@@ -43,28 +43,29 @@ class TalkViewController : AVPlayerViewController {
                 }
             }
             // Keep an eye on current play time and fetch relevant slides
-            slidesTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0))
+
+            slidesTimer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global(qos: .userInitiated))
             if let timer = slidesTimer {
-                dispatch_source_set_event_handler(timer) {
-                    if self.player?.rate > 0 {
-                        let second = NSTimeInterval((self.player?.currentTime().value)!/1_000_000_000)
+                timer.setEventHandler {
+                    if let rate = self.player?.rate, rate > 0 {
+                        let second = TimeInterval((self.player?.currentTime().value)!/1_000_000_000)
                         self.talkDelegate?.talkCurrentTimeChanged(self, currentTime: second)
                         if let slideNumber = self.talk?.slideTimes[second+1] { // Look ahead a second to have the slide fetched in time
                             dump("\(second)s \(slideNumber-1)")
                             // Prefetch next 10 slides
-                            dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)) {
-                                (max(0,slideNumber-1)..<(slideNumber+10)).forEach { talk[slide: $0] }
+                            DispatchQueue.global(qos: .utility).async {
+                                (max(0,slideNumber-1)..<(slideNumber+10)).forEach { _ = talk[slide: $0] }
                             }
                             if let slide = talk[slide: max(0,slideNumber-1)] {
-                                dispatch_async(dispatch_get_main_queue()) {
+                                DispatchQueue.main.async {
                                     self.slideOverlayView?.image = slide
                                 }
                             }
                         }
                     }
                 }
-                dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, NSEC_PER_SEC, 0)
-                dispatch_resume(timer)
+                timer.scheduleRepeating(deadline: DispatchTime.now(), interval: .seconds(1))
+                timer.resume()
             }
             player?.play()
         }

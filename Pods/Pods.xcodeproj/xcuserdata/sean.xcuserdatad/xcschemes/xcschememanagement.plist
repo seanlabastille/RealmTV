@@ -34,26 +34,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>AsyncNetwork-iOS.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>AsyncNetwork-tvOS.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>CocoaAsyncSocket-iOS.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>CocoaAsyncSocket-tvOS.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Freddy-iOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -87,22 +67,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0AD8ABFF06D7F72D4DBE436F791E596F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>2246C76B57574812052818C1C182BFED</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>2E7BB90A1FA94D276E31E2902FFACCF7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>3FECBCA2DC6A93ED9FC47AE95522699E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -122,12 +87,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7A52A8E7F25AE6A46ACD071EFCD9FA85</key>
+		<key>54073A2CEC3257B7E0E99B9C6A95DC3E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7D6F13F0F85291C910C70D145694D189</key>
+		<key>7A52A8E7F25AE6A46ACD071EFCD9FA85</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -142,17 +107,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>91706078AA08E5E075DC31B8BA1545FB</key>
+		<key>98165428CFC51F211407A53D61ACDC2A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>A64BC079AD4AF3BFB678711715A8B266</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CD4C689C4B4C1F703468133029ABC972</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -11,8 +11,10 @@
 		1409ABA81CFB15A000E91337 /* Pipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1430ECDD1CE2EDC300978DBC /* Pipeline.swift */; };
 		1409ABAA1CFB1C9300E91337 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1409ABA91CFB1C9300E91337 /* WebKit.framework */; };
 		140AF6B31CFD55720027EF9C /* transcriptWrangler.js in Resources */ = {isa = PBXBuildFile; fileRef = 140AF6B11CFD556E0027EF9C /* transcriptWrangler.js */; };
+		147D38631D314B130048A8E5 /* PlaybackControlsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147D38611D314ADF0048A8E5 /* PlaybackControlsViewController.swift */; };
+		147EF3E91D2915750069D001 /* TalkDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147EF3E81D2915750069D001 /* TalkDetailViewController.swift */; };
 		14B5D24C1CE19B1300BCB79C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5D24B1CE19B1300BCB79C /* AppDelegate.swift */; };
-		14B5D24E1CE19B1300BCB79C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5D24D1CE19B1300BCB79C /* ViewController.swift */; };
+		14B5D24E1CE19B1300BCB79C /* TalkListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5D24D1CE19B1300BCB79C /* TalkListViewController.swift */; };
 		14B5D2511CE19B1300BCB79C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14B5D24F1CE19B1300BCB79C /* Main.storyboard */; };
 		14B5D2531CE19B1300BCB79C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14B5D2521CE19B1300BCB79C /* Assets.xcassets */; };
 		14B5D25B1CE19BAC00BCB79C /* TalkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B5D25A1CE19BAC00BCB79C /* TalkViewController.swift */; };
@@ -29,10 +31,12 @@
 /* Begin PBXFileReference section */
 		1409ABA91CFB1C9300E91337 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		140AF6B11CFD556E0027EF9C /* transcriptWrangler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = transcriptWrangler.js; sourceTree = "<group>"; };
-		1430ECDD1CE2EDC300978DBC /* Pipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipeline.swift; sourceTree = "<group>"; };
+		1430ECDD1CE2EDC300978DBC /* Pipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Pipeline.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		147D38611D314ADF0048A8E5 /* PlaybackControlsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackControlsViewController.swift; sourceTree = "<group>"; };
+		147EF3E81D2915750069D001 /* TalkDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalkDetailViewController.swift; sourceTree = "<group>"; };
 		14B5D2481CE19B1300BCB79C /* RealmTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealmTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14B5D24B1CE19B1300BCB79C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		14B5D24D1CE19B1300BCB79C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		14B5D24D1CE19B1300BCB79C /* TalkListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalkListViewController.swift; sourceTree = "<group>"; };
 		14B5D2501CE19B1300BCB79C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		14B5D2521CE19B1300BCB79C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		14B5D2541CE19B1300BCB79C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,12 +103,13 @@
 			isa = PBXGroup;
 			children = (
 				14B5D24B1CE19B1300BCB79C /* AppDelegate.swift */,
-				14B5D24D1CE19B1300BCB79C /* ViewController.swift */,
+				14B5D24D1CE19B1300BCB79C /* TalkListViewController.swift */,
 				14B5D24F1CE19B1300BCB79C /* Main.storyboard */,
 				14B5D2521CE19B1300BCB79C /* Assets.xcassets */,
 				14B5D2541CE19B1300BCB79C /* Info.plist */,
 				14B5D25A1CE19BAC00BCB79C /* TalkViewController.swift */,
 				1430ECDD1CE2EDC300978DBC /* Pipeline.swift */,
+				147EF3E81D2915750069D001 /* TalkDetailViewController.swift */,
 			);
 			path = RealmTV;
 			sourceTree = "<group>";
@@ -119,6 +124,7 @@
 				14F468CA1CE3C65900CCD55F /* Assets.xcassets */,
 				14F468CC1CE3C65900CCD55F /* LaunchScreen.storyboard */,
 				14F468CF1CE3C65900CCD55F /* Info.plist */,
+				147D38611D314ADF0048A8E5 /* PlaybackControlsViewController.swift */,
 			);
 			name = "realmtv-ios";
 			path = "RealmTV-ios";
@@ -153,12 +159,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 14B5D2571CE19B1300BCB79C /* Build configuration list for PBXNativeTarget "RealmTV" */;
 			buildPhases = (
-				760E1004A2A8E4ED92157ED2 /* 📦 Check Pods Manifest.lock */,
+				760E1004A2A8E4ED92157ED2 /* [CP] Check Pods Manifest.lock */,
 				14B5D2441CE19B1300BCB79C /* Sources */,
 				14B5D2451CE19B1300BCB79C /* Frameworks */,
 				14B5D2461CE19B1300BCB79C /* Resources */,
-				23A4453C1AD177373481F29E /* 📦 Embed Pods Frameworks */,
-				FA18BC7D26CCAAB2F722576E /* 📦 Copy Pods Resources */,
+				23A4453C1AD177373481F29E /* [CP] Embed Pods Frameworks */,
+				FA18BC7D26CCAAB2F722576E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -173,12 +179,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 14F468D01CE3C65900CCD55F /* Build configuration list for PBXNativeTarget "realmtv-ios" */;
 			buildPhases = (
-				E19F936440D69C43CD4BA2E0 /* 📦 Check Pods Manifest.lock */,
+				E19F936440D69C43CD4BA2E0 /* [CP] Check Pods Manifest.lock */,
 				14F468BD1CE3C65900CCD55F /* Sources */,
 				14F468BE1CE3C65900CCD55F /* Frameworks */,
 				14F468BF1CE3C65900CCD55F /* Resources */,
-				D4C016154A571AA72EA97B94 /* 📦 Embed Pods Frameworks */,
-				850F3B0E021BA1CE27274C91 /* 📦 Copy Pods Resources */,
+				D4C016154A571AA72EA97B94 /* [CP] Embed Pods Frameworks */,
+				850F3B0E021BA1CE27274C91 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -196,12 +202,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Seán Labastille";
 				TargetAttributes = {
 					14B5D2471CE19B1300BCB79C = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = J3TK74588Q;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 0;
@@ -214,6 +221,7 @@
 					14F468C01CE3C65900CCD55F = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = J3TK74588Q;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
@@ -271,14 +279,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		23A4453C1AD177373481F29E /* 📦 Embed Pods Frameworks */ = {
+		23A4453C1AD177373481F29E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,29 +294,29 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RealmTV/Pods-RealmTV-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		760E1004A2A8E4ED92157ED2 /* 📦 Check Pods Manifest.lock */ = {
+		760E1004A2A8E4ED92157ED2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		850F3B0E021BA1CE27274C91 /* 📦 Copy Pods Resources */ = {
+		850F3B0E021BA1CE27274C91 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -316,14 +324,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-realmtv-ios/Pods-realmtv-ios-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D4C016154A571AA72EA97B94 /* 📦 Embed Pods Frameworks */ = {
+		D4C016154A571AA72EA97B94 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -331,29 +339,29 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-realmtv-ios/Pods-realmtv-ios-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E19F936440D69C43CD4BA2E0 /* 📦 Check Pods Manifest.lock */ = {
+		E19F936440D69C43CD4BA2E0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		FA18BC7D26CCAAB2F722576E /* 📦 Copy Pods Resources */ = {
+		FA18BC7D26CCAAB2F722576E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -368,9 +376,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14B5D24E1CE19B1300BCB79C /* ViewController.swift in Sources */,
+				14B5D24E1CE19B1300BCB79C /* TalkListViewController.swift in Sources */,
 				14B5D25B1CE19BAC00BCB79C /* TalkViewController.swift in Sources */,
 				14B5D24C1CE19B1300BCB79C /* AppDelegate.swift in Sources */,
+				147EF3E91D2915750069D001 /* TalkDetailViewController.swift in Sources */,
 				1409ABA81CFB15A000E91337 /* Pipeline.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,6 +389,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1409ABA71CFB11B300E91337 /* Pipeline.swift in Sources */,
+				147D38631D314B130048A8E5 /* PlaybackControlsViewController.swift in Sources */,
 				14F468C61CE3C65900CCD55F /* ViewController.swift in Sources */,
 				14F468C41CE3C65900CCD55F /* AppDelegate.swift in Sources */,
 			);
@@ -506,19 +516,18 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J3TK74588Q;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/RealmTV/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lz",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
 		};
@@ -530,6 +539,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J3TK74588Q;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -539,6 +549,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -548,12 +561,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J3TK74588Q;
 				INFOPLIST_FILE = "$(SRCROOT)/RealmTV-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -564,12 +579,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = J3TK74588Q;
 				INFOPLIST_FILE = "$(SRCROOT)/RealmTV-ios/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = systems.sean.realmtv;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
