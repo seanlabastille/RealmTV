@@ -175,7 +175,7 @@ extension FeedItem {
     func materializeVideoURL(_ videoURL: URL, completion: @escaping ((URL?) -> ())) {
         switch videoURL.host {
         case .some("realm.wistia.com"):
-            var request = URLRequest(url: URL(string: "https://fast.wistia.net/embed/iframe/\(videoURL.lastPathComponent ?? "")")!)
+            var request = URLRequest(url: URL(string: "https://fast.wistia.net/embed/iframe/\(videoURL.lastPathComponent)")!)
             request.addValue("\(videoURL)", forHTTPHeaderField: "Referer")
             Alamofire.request(request).response { defaultDataResponse in
                 let responseString = String(data: defaultDataResponse.data!, encoding: String.Encoding.utf8)!

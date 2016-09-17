@@ -1,6 +1,0 @@
-framework module AsyncNetwork {
-  umbrella header "AsyncNetwork-tvOS-umbrella.h"
-
-  export *
-  module * { export * }
-}

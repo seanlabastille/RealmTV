@@ -86,16 +86,12 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/Alamofire-iOS/Alamofire.framework"
   install_framework "$BUILT_PRODUCTS_DIR/AlamofireRSSParser-iOS/AlamofireRSSParser.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/AsyncNetwork-iOS/AsyncNetwork.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/CocoaAsyncSocket-iOS/CocoaAsyncSocket.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Freddy-iOS/Freddy.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Ji-iOS/Ji.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/Alamofire-iOS/Alamofire.framework"
   install_framework "$BUILT_PRODUCTS_DIR/AlamofireRSSParser-iOS/AlamofireRSSParser.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/AsyncNetwork-iOS/AsyncNetwork.framework"
-  install_framework "$BUILT_PRODUCTS_DIR/CocoaAsyncSocket-iOS/CocoaAsyncSocket.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Freddy-iOS/Freddy.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Ji-iOS/Ji.framework"
 fi

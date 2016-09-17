@@ -6,7 +6,6 @@ target 'RealmTV' do
   use_frameworks!
   pod 'AlamofireRSSParser', :podspec => './AlamofireRSSParser.podspec'
   pod 'Ji'
-  pod 'AsyncNetwork', :git => 'https://github.com/jhaybie/async-network.git'
   pod 'Freddy', :git => 'https://github.com/bignerdranch/Freddy.git', :branch => 'swift3'
 end
 
@@ -16,13 +15,4 @@ target 'realmtv-ios' do
     pod 'Ji'
     pod 'Freddy', :git => 'https://github.com/bignerdranch/Freddy.git', :branch => 'swift3'
     pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'swift3'
-    pod 'AsyncNetwork', :git => 'https://github.com/jhaybie/async-network.git'
-end
-
-post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-            config.build_settings['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = 'NO'
-        end
-    end
 end
